@@ -4,6 +4,6 @@ import { SeguimientoService } from './seguimiento.service';
 
 @Module({
   controllers: [SeguimientoController],
-  providers: [SeguimientoService]
+  providers: [SeguimientoService],
 })
 export class SeguimientoModule {}

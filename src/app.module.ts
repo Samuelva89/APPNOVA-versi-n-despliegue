@@ -6,17 +6,17 @@ import { UserModule } from './user/user.module';
 import { AprendizModule } from './aprendiz/aprendiz.module';
 import { AuthModule } from './auth/auth.module';
 import { ProjectoModule } from './projecto/projecto.module';
-import { InstructoresService } from './instructores/instructores.service';
-import { InstructoresController } from './instructores/instructores.controller';
 import { InstructoresModule } from './instructores/instructores.module';
 import { SemilleroModule } from './semillero/semillero.module';
 import { EvidenciasModule } from './evidencias/evidencias.module';
 import { CronogramaModule } from './cronograma/cronograma.module';
 import { SeguimientoModule } from './seguimiento/seguimiento.module';
+import { getDatabaseConfig } from './config/database.config';
+import { InstructoresProjectoModule } from './instructores-projecto/instructores-projecto.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017/appnova'),
+    MongooseModule.forRoot(getDatabaseConfig().uri),
     UserModule,
     AprendizModule,
     AuthModule,
@@ -26,8 +26,9 @@ import { SeguimientoModule } from './seguimiento/seguimiento.module';
     EvidenciasModule,
     CronogramaModule,
     SeguimientoModule,
+    InstructoresProjectoModule,
   ],
-  controllers: [AppController, InstructoresController],
-  providers: [AppService, InstructoresService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

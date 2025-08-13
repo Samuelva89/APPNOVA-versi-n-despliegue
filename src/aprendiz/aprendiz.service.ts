@@ -17,7 +17,7 @@ export class AprendizService {
 
   async consultarTodos(): Promise<IAprendiz[]> {
     return await this.aprendizModel.find().exec();
- }
+  }
 
   async consultarPorId(id: string): Promise<IAprendiz | null> {
     return await this.aprendizModel.findById(id).exec();
@@ -25,10 +25,13 @@ export class AprendizService {
 
   async actualizar(
     id: string,
-    actualizarAprendizDto: Partial<AprendizDto>,
+    actualizarAprendizDto: Partial<IAprendiz>,
   ): Promise<IAprendiz | null> {
     return await this.aprendizModel
-      .findByIdAndUpdate(id, actualizarAprendizDto, { new: true })
+      .findByIdAndUpdate(id, actualizarAprendizDto, {
+        new: true,
+        runValidators: true,
+      })
       .exec();
   }
 
