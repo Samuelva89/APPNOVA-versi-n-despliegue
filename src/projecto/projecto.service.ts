@@ -9,7 +9,7 @@ export class ProjectoService {
   constructor(
     @InjectModel('Projecto') private readonly ProjectoModel: Model<Iprojecto>,
   ) {}
-  async crear(crearProjectoDto: projectoDto) {
+  async crear(crearProjectoDto: projectoDto): Promise<Iprojecto> {
     const respuesta = new this.ProjectoModel(crearProjectoDto);
     return await respuesta.save();
   }

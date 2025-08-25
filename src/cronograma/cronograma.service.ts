@@ -26,7 +26,7 @@ export class CronogramaService {
   async actualizar(
     id: string,
     actualizarCrronogramaDto: Partial<CronogramaDto>,
-  ) {
+  ): Promise<ICronograma | null> {
     return await this.cronogramaModel
       .findByIdAndUpdate(id, actualizarCrronogramaDto, {
         new: true,

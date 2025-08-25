@@ -24,7 +24,7 @@ export class EvidenciasService {
     return await this.evidenciaModel.findById(id).exec();
   }
 
-  async actualizar(id: string, actualizarevidenciaDto: Partial<EvidenciaDto>) {
+  async actualizar(id: string, actualizarevidenciaDto: Partial<EvidenciaDto>): Promise<IEvidencia | null> {
     return await this.evidenciaModel
       .findByIdAndUpdate(id, actualizarevidenciaDto, {
         new: true,
