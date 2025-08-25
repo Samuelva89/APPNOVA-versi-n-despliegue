@@ -1,4 +1,10 @@
 import mongoose from 'mongoose';
+import { IAprendiz } from 'src/aprendiz/dto/aprendiz.model';
+import { IEvidencia } from 'src/evidencias/dto/evidencias.model';
+import { IInstructores } from 'src/instructores/dto/instructores.model';
+import { ISeguimiento } from 'src/seguimiento/dto/seguimiento.model';
+import { ISemillero } from 'src/semillero/dto/semillero.model';
+import { IUser } from 'src/user/dto/user.model';
 
 export const ProjectoSchema = new mongoose.Schema({
   titulo: { type: String, required: true },
@@ -14,6 +20,13 @@ export const ProjectoSchema = new mongoose.Schema({
 });
 
 export interface Iprojecto extends mongoose.Document {
+  user: IUser; //relcion con User
+  instructor: IInstructores; // relacion con instructores
+  aprendiz: IAprendiz; // relacion con aprendiz
+  evidencias: IEvidencia// relacion eviencias
+  semillero: ISemillero// relacion con semillero
+  instructores: IInstructores// relacion con instructores
+  seguimiento: ISeguimiento// relacion con seguimiento
   titulo: string;
   resumen: string;
   planteamientodelProblema: string;

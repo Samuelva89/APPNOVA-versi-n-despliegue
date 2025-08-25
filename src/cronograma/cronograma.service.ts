@@ -10,7 +10,7 @@ export class CronogramaService {
     private readonly cronogramaModel: Model<ICronograma>,
   ) {}
 
-  async crear(CrearCronogramaDto: CronogramaDto) {
+  async crear(CrearCronogramaDto: CronogramaDto): Promise<ICronograma> {
     const respuesta = new this.cronogramaModel(CrearCronogramaDto);
     return await respuesta.save();
   }
@@ -19,11 +19,14 @@ export class CronogramaService {
     return await this.cronogramaModel.find().exec();
   }
 
-  async consultarPorId(id: String): Promise<ICronograma | null> {
+  async consultarPorId(id: string): Promise<ICronograma | null> {
     return await this.cronogramaModel.findById(id).exec();
   }
 
-  async actualizar(id: String, actualizarCrronogramaDto: Partial<ICronograma>) {
+  async actualizar(
+    id: string,
+    actualizarCrronogramaDto: Partial<CronogramaDto>,
+  ): Promise<ICronograma | null> {
     return await this.cronogramaModel
       .findByIdAndUpdate(id, actualizarCrronogramaDto, {
         new: true,
@@ -32,7 +35,7 @@ export class CronogramaService {
       .exec();
   }
 
-  async eliminar(id: String): Promise<ICronograma | null> {
+  async eliminar(id: string): Promise<ICronograma | null> {
     return await this.cronogramaModel.findByIdAndDelete(id).exec();
   }
 }

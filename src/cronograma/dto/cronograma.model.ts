@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 // Esquema de Mongoose para la colección de Cronogramas
 export const CronogramaSchema = new mongoose.Schema(
   {
-    actividad_general: { type: String, required: true },
+    actividad_general: { type: String, required: true, trim: true },
     fecha_inicio: { type: Date },
     fecha_fin: { type: Date },
   },

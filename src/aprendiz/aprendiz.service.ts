@@ -10,7 +10,7 @@ export class AprendizService {
     @InjectModel('Aprendiz') private readonly aprendizModel: Model<IAprendiz>,
   ) {}
 
-  async crear(crearAprendizDto: AprendizDto) {
+  async crear(crearAprendizDto: AprendizDto): Promise<IAprendiz> {
     const respuesta = new this.aprendizModel(crearAprendizDto);
     return await respuesta.save();
   }
@@ -25,7 +25,7 @@ export class AprendizService {
 
   async actualizar(
     id: string,
-    actualizarAprendizDto: Partial<IAprendiz>,
+    actualizarAprendizDto: Partial<AprendizDto>,
   ): Promise<IAprendiz | null> {
     return await this.aprendizModel
       .findByIdAndUpdate(id, actualizarAprendizDto, {
