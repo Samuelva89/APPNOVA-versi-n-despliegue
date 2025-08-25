@@ -37,7 +37,7 @@ export class SemilleroController {
   @Put(':id')
   async actualizar(
     @Param('id') id: string,
-    @Body() actualizarSemilleroDTO: SemilleroDTO,
+    @Body() actualizarSemilleroDTO: Partial<ISemillero>,
   ): Promise<ISemillero | null> {
     return await this.semilleroService.actualizar(id, actualizarSemilleroDTO);
   }

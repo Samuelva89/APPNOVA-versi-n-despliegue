@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Iprojecto } from './dto/projecto.model';
-import { prouectoDto } from './dto/projecto.dto';
+import { projectoDto } from './dto/projecto.dto';
 
 @Injectable()
 export class ProjectoService {
   constructor(
     @InjectModel('Projecto') private readonly ProjectoModel: Model<Iprojecto>,
   ) {}
-  async crear(crearProjectoDto: prouectoDto) {
+  async crear(crearProjectoDto: projectoDto) {
     const respuesta = new this.ProjectoModel(crearProjectoDto);
     return await respuesta.save();
   }

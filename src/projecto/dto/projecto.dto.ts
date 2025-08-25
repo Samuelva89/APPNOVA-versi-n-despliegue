@@ -1,6 +1,6 @@
 import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
 
-export class prouectoDto {
+export class projectoDto {
   @IsString()
   @IsNotEmpty()
   titulo: string;

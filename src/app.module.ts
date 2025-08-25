@@ -12,7 +12,6 @@ import { EvidenciasModule } from './evidencias/evidencias.module';
 import { CronogramaModule } from './cronograma/cronograma.module';
 import { SeguimientoModule } from './seguimiento/seguimiento.module';
 import { getDatabaseConfig } from './config/database.config';
-import { InstructoresProjectoModule } from './instructores-projecto/instructores-projecto.module';
 
 @Module({
   imports: [
@@ -26,7 +25,6 @@ import { InstructoresProjectoModule } from './instructores-projecto/instructores
     EvidenciasModule,
     CronogramaModule,
     SeguimientoModule,
-    InstructoresProjectoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
