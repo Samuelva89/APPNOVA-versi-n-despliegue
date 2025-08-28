@@ -6,7 +6,7 @@ import { EvidenciaSchema } from './dto/evidencias.model';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: 'evidencia', schema: EvidenciaSchema }]),
+    MongooseModule.forFeature([{ name: 'Evidencia', schema: EvidenciaSchema }]),
   ],
   controllers: [EvidenciasController],
   providers: [EvidenciasService],

@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { IInstructores } from './dto/instructores.model';
 import { Model } from 'mongoose';
@@ -12,31 +16,62 @@ export class InstructoresService {
   ) {}
 
   async crear(crearInstructoresDto: instructoresDto): Promise<IInstructores> {
-    const respuesta = new this.instructoresModel(crearInstructoresDto);
-    return await respuesta.save();
+    const { Documento_Identidad, Email } = crearInstructoresDto;
+
+    // Lógica para verificar duplicados antes de guardar
+    const instructorExistente = await this.instructoresModel
+      .findOne({
+        $or: [{ Documento_Identidad }, { Email }],
+      })
+      .exec();
+
+    if (instructorExistente) {
+      throw new ConflictException(
+        'El documento de identidad o el correo electrónico ya existen.',
+      );
+    }
+
+    const nuevoInstructor = new this.instructoresModel(crearInstructoresDto);
+    return await nuevoInstructor.save();
   }
 
   async consultarTodos(): Promise<IInstructores[]> {
     return await this.instructoresModel.find().exec();
   }
 
-  async consultarPorId(id: string): Promise<IInstructores | null> {
-    return await this.instructoresModel.findById(id).exec();
+  async consultarPorId(id: string): Promise<IInstructores> {
+    const instructor = await this.instructoresModel.findById(id).exec();
+    if (!instructor) {
+      throw new NotFoundException(`Instructor con ID "${id}" no encontrado.`);
+    }
+    return instructor;
   }
 
   async actualizar(
     id: string,
     actualizarInstructoresDto: Partial<instructoresDto>,
-  ): Promise<IInstructores | null> {
-    return await this.instructoresModel
+  ): Promise<IInstructores> {
+    const instructorActualizado = await this.instructoresModel
       .findByIdAndUpdate(id, actualizarInstructoresDto, {
         new: true,
         runValidators: true,
       })
       .exec();
+
+    if (!instructorActualizado) {
+      throw new NotFoundException(`Instructor con ID "${id}" no encontrado.`);
+    }
+
+    return instructorActualizado;
   }
 
-  async eliminar(id: string): Promise<IInstructores | null> {
-    return await this.instructoresModel.findByIdAndDelete(id).exec();
+  async eliminar(id: string): Promise<IInstructores> {
+    const instructorEliminado = await this.instructoresModel
+      .findByIdAndDelete(id)
+      .exec();
+    if (!instructorEliminado) {
+      throw new NotFoundException(`Instructor con ID "${id}" no encontrado.`);
+    }
+    return instructorEliminado;
   }
 }

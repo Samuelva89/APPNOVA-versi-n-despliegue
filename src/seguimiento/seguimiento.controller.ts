@@ -6,6 +6,9 @@ import {
   Delete,
   Param,
   Body,
+  HttpCode,
+  HttpStatus,
+  Patch,
 } from '@nestjs/common';
 import { SeguimientoService } from './seguimiento.service';
 import { ObservacionSegDto } from './dto/seguimiento.dto';
@@ -15,38 +18,43 @@ import { ISeguimiento } from './dto/seguimiento.model';
 export class seguimientoController {
   constructor(private readonly seguimientoService: SeguimientoService) {}
 
-  // Crear observación
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   async crear(
     @Body() crearObservacionSegDto: ObservacionSegDto,
   ): Promise<ISeguimiento> {
-    return this.seguimientoService.crear(crearObservacionSegDto);
+    return await this.seguimientoService.crear(crearObservacionSegDto);
   }
 
-  // Consultar todas las observaciones
   @Get()
   async consultarTodos(): Promise<ISeguimiento[]> {
-    return this.seguimientoService.consultarTodos();
+    return await this.seguimientoService.consultarTodos();
   }
 
-  // Consultar observación por ID
   @Get(':id')
-  async consultarID(@Param('id') id: string): Promise<ISeguimiento | null> {
-    return this.seguimientoService.consultarID(id);
+  async consultarID(@Param('id') id: string): Promise<ISeguimiento> {
+    return await this.seguimientoService.consultarID(id);
   }
 
-  // Actualizar observación por ID
   @Put(':id')
   async actualizar(
     @Param('id') id: string,
-    @Body() actualizarDto: Partial<ObservacionSegDto>,
-  ): Promise<ISeguimiento | null> {
-    return this.seguimientoService.actualizar(id, actualizarDto);
+    @Body() actualizarDto: ObservacionSegDto,
+  ): Promise<ISeguimiento> {
+    return await this.seguimientoService.actualizar(id, actualizarDto);
   }
 
-  // Eliminar observación por ID
+  @Patch(':id')
+  async actualizarParcial(
+    @Param('id') id: string,
+    @Body() actualizarDto: Partial<ObservacionSegDto>,
+  ): Promise<ISeguimiento> {
+    return await this.seguimientoService.actualizar(id, actualizarDto);
+  }
+
   @Delete(':id')
-  async eliminar(@Param('id') id: string): Promise<ISeguimiento | null> {
-    return this.seguimientoService.eliminar(id);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async eliminar(@Param('id') id: string) {
+    await this.seguimientoService.eliminar(id);
   }
 }

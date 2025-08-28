@@ -1,11 +1,14 @@
 import {
   Body,
   Controller,
-  Param,
   Post,
   Get,
-  Delete,
+  Param,
   Put,
+  Delete,
+  Patch,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { CronogramaService } from './cronograma.service';
 import { CronogramaDto } from './dto/cronograma.dto';
@@ -16,6 +19,7 @@ export class CronogramaController {
   constructor(private readonly cronogramaService: CronogramaService) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   async crear(@Body() crearCronogramaDto: CronogramaDto): Promise<ICronograma> {
     return await this.cronogramaService.crear(crearCronogramaDto);
   }
@@ -26,22 +30,29 @@ export class CronogramaController {
   }
 
   @Get(':id')
-  async consultarPorId(
-    @Body() @Param('id') id: string,
-  ): Promise<ICronograma | null> {
+  async consultarPorId(@Param('id') id: string): Promise<ICronograma> {
     return await this.cronogramaService.consultarPorId(id);
   }
 
   @Put(':id')
   async actualizar(
     @Param('id') id: string,
+    @Body() actualizarCronogramaDto: CronogramaDto,
+  ): Promise<ICronograma> {
+    return await this.cronogramaService.actualizar(id, actualizarCronogramaDto);
+  }
+
+  @Patch(':id')
+  async actualizarParcial(
+    @Param('id') id: string,
     @Body() actualizarCronogramaDto: Partial<CronogramaDto>,
-  ): Promise<ICronograma | null> {
+  ): Promise<ICronograma> {
     return await this.cronogramaService.actualizar(id, actualizarCronogramaDto);
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async eliminar(@Param('id') id: string) {
-    return await this.cronogramaService.eliminar(id);
+    await this.cronogramaService.eliminar(id);
   }
 }

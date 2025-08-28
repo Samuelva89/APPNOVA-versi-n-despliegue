@@ -1,28 +1,29 @@
-// evidencias.dto.ts
 import {
   IsString,
   IsNotEmpty,
   IsDateString,
   IsOptional,
+  IsUrl,
 } from 'class-validator';
 
 export class EvidenciaDto {
   @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'El título es obligatorio.' })
   titulo: string;
 
   @IsDateString(
     {},
-    { message: 'La fecha de inicio debe tener un formato válido (YYYY-MM-DD)' },
+    { message: 'La fecha de carga debe tener un formato válido.' },
   )
   @IsOptional()
   fechacarga: Date;
 
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'El tipo de evidencia es obligatorio.' })
   @IsString()
   tipoevidencia: string;
 
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'La URL del archivo es obligatoria.' })
   @IsString()
+  @IsUrl({}, { message: 'La URL del archivo debe ser un enlace válido.' })
   archivoURL: string;
 }
