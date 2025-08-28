@@ -6,6 +6,9 @@ import {
   Param,
   Delete,
   Put,
+  Patch,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { EvidenciasService } from './evidencias.service';
 import { IEvidencia } from './dto/evidencias.model';
@@ -16,6 +19,7 @@ export class EvidenciasController {
   constructor(private readonly evidenciaService: EvidenciasService) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   async crear(@Body() crearEvidenciaDto: EvidenciaDto): Promise<IEvidencia> {
     return await this.evidenciaService.crear(crearEvidenciaDto);
   }
@@ -26,22 +30,29 @@ export class EvidenciasController {
   }
 
   @Get(':id')
-  async consultarporID(
-    @Body() @Param('id') id: string,
-  ): Promise<IEvidencia | null> {
+  async consultarporID(@Param('id') id: string): Promise<IEvidencia> {
     return await this.evidenciaService.consultarPorId(id);
   }
 
   @Put(':id')
   async actualizar(
     @Param('id') id: string,
+    @Body() actualizarEvidenciasDto: EvidenciaDto,
+  ): Promise<IEvidencia> {
+    return await this.evidenciaService.actualizar(id, actualizarEvidenciasDto);
+  }
+
+  @Patch(':id')
+  async actualizarParcial(
+    @Param('id') id: string,
     @Body() actualizarEvidenciasDto: Partial<EvidenciaDto>,
-  ): Promise<IEvidencia | null> {
+  ): Promise<IEvidencia> {
     return await this.evidenciaService.actualizar(id, actualizarEvidenciasDto);
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async eliminar(@Param('id') id: string) {
-    return await this.evidenciaService.eliminar(id);
+    await this.evidenciaService.eliminar(id);
   }
 }

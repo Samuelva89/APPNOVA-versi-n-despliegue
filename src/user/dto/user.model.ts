@@ -1,25 +1,21 @@
-import mongoose from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
 
-// Esquema de Mongoose para la colección de Usuarios
+
+export interface IUser extends Document {
+  nombreCompleto: string;
+  email: string;
+  contrasena: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export const UserSchema = new mongoose.Schema(
   {
-    // Nombre completo del usuario, requerido
-    NombreCompleto: { type: String, required: true },
-
-    // Correo electrónico, requerido y único
+    nombreCompleto: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-
-    // Contraseña (encriptada), requerida
-    contraseña: { type: String, required: true },
+    contrasena: { type: String, required: true }, // Notar que el campo ahora se llama 'contrasena'
   },
-  { timestamps: true }, // Agrega automáticamente createdAt y updatedAt
+  {
+    timestamps: true,
+  },
 );
-
-export interface IUser extends mongoose.Document {
-  //rol: IRol;
-  NombreCompleto: string;
-  email: string;
-  contraseña: string;
-  createdAd: Date;
-  updateAdd: Date;
-}
