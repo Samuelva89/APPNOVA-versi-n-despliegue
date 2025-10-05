@@ -1,0 +1,18 @@
+# Archivo de configuración para Render
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: appnova-backend
+    env: node
+    plan: free # Puedes cambiarlo a un plan de pago si lo necesitas
+    rootDir: project-app-nova # Directorio donde se encuentra la app NestJS
+    buildCommand: "npm install && npm run build"
+    startCommand: "npm run start:prod"
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: DATABASE_URL # ¡IMPORTANTE!
+        # Debes reemplazar este valor en el dashboard de Render
+        # con la URL de conexión de tu base de datos de producción (ej. MongoDB Atlas).
+        value: "mongodb://usuario:contraseña@host:puerto/basededatos"

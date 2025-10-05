@@ -1,0 +1,15 @@
+node_modules
+npm-debug.log
+dist
+.DS_Store
+.env
+/project-app-nova/node_modules
+/project-app-nova/dist
+/backappnova
+/project-app-nova/test
+/project-app-nova/src/test
+/project-app-nova/uploads
+*.md
+eslint.config.mjs
+nest-cli.json
+tsconfig.build.json

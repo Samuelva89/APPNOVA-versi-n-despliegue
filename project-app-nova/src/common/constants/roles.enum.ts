@@ -1,0 +1,8 @@
+export enum UserRole {
+    LIDER_DE_PROYECTO = 'LIDER_DE_PROYECTO',
+    COINVESTIGADOR = 'COINVESTIGADOR',
+    INVESTIGADOR = 'INVESTIGADOR',
+    DINAMIZADOR = 'DINAMIZADOR',
+    LIDER_DE_SEMILLERO = 'LIDER_DE_SEMILLERO',
+
+}//creacion de los roles y permisos de los usuarios
