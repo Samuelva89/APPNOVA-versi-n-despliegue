@@ -24,7 +24,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
+//   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @HttpCode(HttpStatus.CREATED)
   async crear(@Body() crearUserDto: UserDto): Promise<IUser> {
     return await this.userService.crear(crearUserDto);
