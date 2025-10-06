@@ -24,7 +24,7 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { UserRole } from 'src/common/constants/roles.enum';
 
 @Controller('evidencias')
-@UseGuards(AuthGuard('jwt'), RolesGuard)
+@UseGuards(AuthGuard('jwt')/*, RolesGuard*/)
 export class EvidenciasController {
   constructor(private readonly evidenciaService: EvidenciasService) {}
 
@@ -33,7 +33,7 @@ export class EvidenciasController {
    * Utiliza FileInterceptor para procesar el archivo enviado en el campo 'archivo'.
    */
   @Post('upload')
-  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.COINVESTIGADOR, UserRole.INVESTIGADOR)
+  // @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.COINVESTIGADOR, UserRole.INVESTIGADOR)
   @UseInterceptors(FileInterceptor('archivo'))
   async uploadEvidencia(
     @UploadedFile() file: Express.Multer.File, // Inyecta el archivo procesado por Multer
@@ -45,25 +45,25 @@ export class EvidenciasController {
   }
 
   @Get()
-  @Roles(
-    UserRole.LIDER_DE_PROYECTO,
-    UserRole.DINAMIZADOR,
-    UserRole.LIDER_DE_SEMILLERO,
-    UserRole.COINVESTIGADOR,
-    UserRole.INVESTIGADOR,
-  )
+  // @Roles(
+  //   UserRole.LIDER_DE_PROYECTO,
+  //   UserRole.DINAMIZADOR,
+  //   UserRole.LIDER_DE_SEMILLERO,
+  //   UserRole.COINVESTIGADOR,
+  //   UserRole.INVESTIGADOR,
+  // )
   async consultarTodos(): Promise<IEvidencia[]> {
     return await this.evidenciaService.consultarTodos();
   }
 
   @Get(':id')
-  @Roles(
-    UserRole.LIDER_DE_PROYECTO,
-    UserRole.DINAMIZADOR,
-    UserRole.LIDER_DE_SEMILLERO,
-    UserRole.COINVESTIGADOR,
-    UserRole.INVESTIGADOR,
-  )
+  // @Roles(
+  //   UserRole.LIDER_DE_PROYECTO,
+  //   UserRole.DINAMIZADOR,
+  //   UserRole.LIDER_DE_SEMILLERO,
+  //   UserRole.COINVESTIGADOR,
+  //   UserRole.INVESTIGADOR,
+  // )
   async consultarporID(@Param('id') id: string): Promise<IEvidencia> {
     return await this.evidenciaService.consultarPorId(id);
   }
@@ -71,7 +71,7 @@ export class EvidenciasController {
   // NOTA: La actualización (PUT/PATCH) de una evidencia que incluye un archivo
   // es más compleja. Por ahora, nos centramos en la creación.
   @Put(':id')
-  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.COINVESTIGADOR, UserRole.INVESTIGADOR)
+  // @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.COINVESTIGADOR, UserRole.INVESTIGADOR)
   async actualizar(
     @Param('id') id: string,
     @Body() actualizarEvidenciasDto: Partial<CreateEvidenciaDto>,
@@ -80,7 +80,7 @@ export class EvidenciasController {
   }
 
   @Delete(':id')
-  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.COINVESTIGADOR, UserRole.INVESTIGADOR)
+  // @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.COINVESTIGADOR, UserRole.INVESTIGADOR)
   @HttpCode(HttpStatus.NO_CONTENT)
   async eliminar(@Param('id') id: string) {
     await this.evidenciaService.eliminar(id);
