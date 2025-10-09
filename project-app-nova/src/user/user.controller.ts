@@ -24,28 +24,28 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-//   @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @HttpCode(HttpStatus.CREATED)
   async crear(@Body() crearUserDto: UserDto): Promise<IUser> {
     return await this.userService.crear(crearUserDto);
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt')/*, RolesGuard*/)
-  // @Roles(UserRole.LIDER_DE_PROYECTO)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(UserRole.LIDER_DE_PROYECTO)
   async consultarTodos(): Promise<IUser[]> {
     return await this.userService.consultarTodos();
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard('jwt')/*, RolesGuard*/)
-  // @Roles(UserRole.LIDER_DE_PROYECTO)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(UserRole.LIDER_DE_PROYECTO)
   async consultarPorId(@Param('id') id: string): Promise<IUser> {
     return await this.userService.consultarPorId(id);
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard('jwt')/*, RolesGuard*/)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   async actualizar(
     @Param('id') id: string,
     @Body() actualizarUserDTO: UserDto,
@@ -54,7 +54,7 @@ export class UserController {
   }
 
   @Patch(':id')
-  @UseGuards(AuthGuard('jwt')/*, RolesGuard*/)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   async actualizarParcial(
     @Param('id') id: string,
     @Body() actualizarUserDTO: Partial<UserDto>,
@@ -63,7 +63,7 @@ export class UserController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt')/*, RolesGuard*/)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   async eliminar(@Param('id') id: string) {
     await this.userService.eliminar(id);

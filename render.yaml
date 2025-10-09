@@ -12,7 +12,7 @@ services:
     envVars:
       - key: NODE_VERSION
         value: 22
-      - key: DATABASE_URL # ¡IMPORTANTE!
-        # Debes reemplazar este valor en el dashboard de Render
-        # con la URL de conexión de tu base de datos de producción (ej. MongoDB Atlas).
-        value: "mongodb+srv://samuel1219189_db_user:Colombia2025@cluster0.oeszwec.mongodb.net/appnova?retryWrites=true&w=majority"
+      - key: DATABASE_URL
+        # ¡IMPORTANTE! Este valor se debe configurar de forma segura
+        # en el dashboard de Render, en la sección de "Environment Variables".
+        value: "TU_URL_DE_BASE_DE_DATOS_AQUI"
