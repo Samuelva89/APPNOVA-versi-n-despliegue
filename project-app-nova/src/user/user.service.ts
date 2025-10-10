@@ -26,7 +26,7 @@ export class UserService {
     });
 
     const userGuardado = await nuevoUser.save();
-    const result = userGuardado.toObject();
+    const result = (userGuardado as any).toObject();
     delete result.password;
 
     return {
@@ -66,7 +66,7 @@ export class UserService {
       throw new NotFoundException(`Usuario con ID "${id}" no encontrado.`);
     }
 
-    const result = userActualizado.toObject();
+    const result = (userActualizado as any).toObject();
     delete result.password;
 
     return {

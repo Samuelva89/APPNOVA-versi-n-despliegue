@@ -12,7 +12,7 @@ export class SemilleroService {
   ) {}
 
   async crear(CrearSemilleroDTO: SemilleroDTO) {
-    const { Nombre_Semillero } = CrearSemilleroDTO;
+    const { nombreSemillero } = CrearSemilleroDTO;
 
     const semilleroExistente = await this.semilleroModel.findOne({ Nombre_Semillero }).exec();
 

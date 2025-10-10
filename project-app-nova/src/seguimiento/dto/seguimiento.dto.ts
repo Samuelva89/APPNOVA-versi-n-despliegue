@@ -139,9 +139,11 @@ export class ObservacionSegDto {
   @IsString()
   observacion: string;
 
+  @IsNotEmpty({ message: 'El ID del proyecto no puede estar vacío.' })
+  @IsString()
+  projecto: string;
 
-
-  @IsOptional()
+  @IsString()
   readonly proteccionDeDatos: string =
     'De acuerdo con La Ley 1581 de 2012, Protección de Datos Personales, el Servicio Nacional de Aprendizaje SENA, se compromete a garantizar la seguridad y protección de los datos personales que se encuentran almacenados en este documento, y les dará el tratamiento correspondiente en cumplimiento de lo establecido legalmente.';
 }

@@ -15,7 +15,7 @@ export class AuthService {
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.userService.findOneByEmail(email);
     if (user && (await bcrypt.compare(pass, user.password))) {
-      const result = user.toObject();
+      const result = (user as any).toObject();
       delete result.password;
       return result;
     }
@@ -49,7 +49,7 @@ export class AuthService {
     // The hashing responsibility is now in UserService.
     const newUser = await this.userService.crear(userDto);
 
-    const result = newUser.toObject();
+    const result = (newUser as any).toObject();
     delete result.password;
     return result;
   }
