@@ -80,9 +80,10 @@ export class ProjectoDto {
   @IsNotEmpty({ message: 'El objetivo general es obligatorio.' })
   objetivoGeneral: string;
 
-  @IsString()
+  @IsArray()
+  @IsString({ each: true })
   @IsNotEmpty({ message: 'Los objetivos específicos son obligatorios.' })
-  objetivoEspecifico: string[];//cambiar a lista m,s
+  objetivoEspecifico: string[];
 
   @IsString()
   @IsNotEmpty({ message: 'Los beneficiarios son obligatorios.' })

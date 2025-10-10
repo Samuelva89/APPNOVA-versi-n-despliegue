@@ -1,4 +1,4 @@
-import { IsDate, IsEmail, IsNumber, IsString } from 'class-validator';
+import { IsDateString, IsEmail, IsNumber, IsString } from 'class-validator';
 
 export class AprendizDto {
   @IsString()
@@ -11,9 +11,9 @@ export class AprendizDto {
   numeroDeContacto: number;
   @IsEmail()
   correoElectronico: string;
-  @IsDate()
+  @IsDateString()
   fechaDeInicio: Date;
-  @IsDate()
+  @IsDateString()
   fechaEnQueFinaliza: Date;
   @IsString()
   proyectoAsignadoId: string;

@@ -3,7 +3,7 @@ import { IsEmail, IsNumber, IsString, IsNotEmpty } from 'class-validator';
 export class instructoresDto {
   @IsString()
   @IsNotEmpty()
-  Nombre_Instructor: string;
+  nombreInstructor: string;
 
   @IsEmail()
   @IsNotEmpty()
@@ -11,9 +11,9 @@ export class instructoresDto {
 
   @IsNumber()
   @IsNotEmpty()
-  Documento_Identidad: number;
+  documentoIdentidad: number;
 
   @IsNumber()
   @IsNotEmpty()
-  Numero_de_contacto: number;
+  numeroDeContacto: number;
 }

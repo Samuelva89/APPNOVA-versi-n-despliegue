@@ -95,8 +95,11 @@ export class ObservacionSegDto {
   @IsString()
   actividadDecision: string;
 
+  @IsDateString(
+    {},
+    { message: 'La fecha debe ser válida (YYYY-MM-DD).' },
+  )
   @IsNotEmpty({ message: 'Las fechas no pueden estar vacías.' })
-  @IsDate()
   fecha: Date;
 
   @IsNotEmpty({ message: 'Los responsables no pueden estar vacíos.' })
@@ -129,20 +132,16 @@ export class ObservacionSegDto {
   @IsArray({
     message: ' La aprobación de las decisiones no pueden estar vacías.',
   })
-  apruebaSiNo: string;
+  @IsString({ each: true })
+  apruebaSiNo: string[];
 
   @IsNotEmpty({ message: 'Las observaciones no pueden estar vacías.' })
   @IsString()
   observacion: string;
 
-  @IsArray()
-  @IsString()
-  @Matches(/^(data:image\/[a-zA-Z]+;base64,[A-Za-z0-9+/=]+)$/, {
-    each: true,
-    message: 'Cada firma debe ser una cadena en formato base64 válida.',
-  })
-  FirmasOParticipacionVirtual: string[];
 
+
+  @IsOptional()
   readonly proteccionDeDatos: string =
     'De acuerdo con La Ley 1581 de 2012, Protección de Datos Personales, el Servicio Nacional de Aprendizaje SENA, se compromete a garantizar la seguridad y protección de los datos personales que se encuentran almacenados en este documento, y les dará el tratamiento correspondiente en cumplimiento de lo establecido legalmente.';
 }
