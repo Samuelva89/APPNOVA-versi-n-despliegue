@@ -7,8 +7,6 @@ import {
   Post,
   Put,
   Patch,
-  HttpCode,
-  HttpStatus,
   UseGuards,
 } from '@nestjs/common';
 import { SeguimientoService } from './seguimiento.service';
@@ -25,11 +23,10 @@ export class seguimientoController {
   constructor(private readonly seguimientoService: SeguimientoService) {}
 
   @Post()
-  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.DINAMIZADOR)
-  @HttpCode(HttpStatus.CREATED)
+  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.DINAMIZADOR, UserRole.LIDER_DE_SEMILLERO)
   async crear(
     @Body() crearObservacionSegDto: ObservacionSegDto,
-  ): Promise<ISeguimiento> {
+  ): Promise<any> {
     return await this.seguimientoService.crear(crearObservacionSegDto);
   }
 
@@ -58,27 +55,26 @@ export class seguimientoController {
   }
 
   @Put(':id')
-  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.DINAMIZADOR)
+  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.DINAMIZADOR, UserRole.LIDER_DE_SEMILLERO)
   async actualizar(
     @Param('id') id: string,
     @Body() actualizarDto: ObservacionSegDto,
-  ): Promise<ISeguimiento> {
+  ): Promise<any> {
     return await this.seguimientoService.actualizar(id, actualizarDto);
   }
 
   @Patch(':id')
-  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.DINAMIZADOR)
+  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.DINAMIZADOR, UserRole.LIDER_DE_SEMILLERO)
   async actualizarParcial(
     @Param('id') id: string,
     @Body() actualizarDto: Partial<ObservacionSegDto>,
-  ): Promise<ISeguimiento> {
+  ): Promise<any> {
     return await this.seguimientoService.actualizar(id, actualizarDto);
   }
 
   @Delete(':id')
-  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.DINAMIZADOR)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async eliminar(@Param('id') id: string) {
-    await this.seguimientoService.eliminar(id);
+  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.DINAMIZADOR, UserRole.LIDER_DE_SEMILLERO)
+  async eliminar(@Param('id') id: string): Promise<any> {
+    return await this.seguimientoService.eliminar(id);
   }
 }

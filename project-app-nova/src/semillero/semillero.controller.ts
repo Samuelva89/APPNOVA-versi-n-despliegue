@@ -7,8 +7,6 @@ import {
   Post,
   Put,
   Patch,
-  HttpCode,
-  HttpStatus,
   UseGuards,
 } from '@nestjs/common';
 import { SemilleroService } from './semillero.service';
@@ -26,8 +24,8 @@ export class SemilleroController {
   // ===== POST - Crear semillero =====
   @Post()
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @HttpCode(HttpStatus.CREATED)
-  async crear(@Body() crearSemilleroDTO: SemilleroDTO): Promise<ISemillero> {
+  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.LIDER_DE_SEMILLERO, UserRole.DINAMIZADOR)
+  async crear(@Body() crearSemilleroDTO: SemilleroDTO): Promise<any> {
     return await this.semilleroService.crear(crearSemilleroDTO);
   }
 
@@ -54,25 +52,26 @@ export class SemilleroController {
   async actualizar(
     @Param('id') id: string,
     @Body() actualizarSemilleroDTO: SemilleroDTO,
-  ): Promise<ISemillero> {
+  ): Promise<any> {
     return await this.semilleroService.actualizar(id, actualizarSemilleroDTO);
   }
   
   // ===== PATCH - Actualizar semillero parcialmente =====
   @Patch(':id')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.LIDER_DE_SEMILLERO)
   async actualizarParcial(
     @Param('id') id: string,
     @Body() actualizarSemilleroDTO: Partial<SemilleroDTO>,
-  ): Promise<ISemillero> {
+  ): Promise<any> {
     return await this.semilleroService.actualizar(id, actualizarSemilleroDTO);
   }
 
   // ===== DELETE - Eliminar semillero =====
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async eliminar(@Param('id') id: string) {
-    await this.semilleroService.eliminar(id);
+  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.LIDER_DE_SEMILLERO)
+  async eliminar(@Param('id') id: string): Promise<any> {
+    return await this.semilleroService.eliminar(id);
   }
 }

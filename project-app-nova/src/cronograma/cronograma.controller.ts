@@ -7,8 +7,6 @@ import {
   Post,
   Put,
   Patch,
-  HttpCode,
-  HttpStatus,
   UseGuards,
 } from '@nestjs/common';
 import { CronogramaService } from './cronograma.service';
@@ -25,9 +23,8 @@ export class CronogramaController {
   constructor(private readonly cronogramaService: CronogramaService) {}
 
   @Post()
-  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.COINVESTIGADOR, UserRole.INVESTIGADOR)
-  @HttpCode(HttpStatus.CREATED)
-  async crear(@Body() crearCronogramaDto: CronogramaDto): Promise<ICronograma> {
+  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.COINVESTIGADOR, UserRole.INVESTIGADOR, UserRole.LIDER_DE_SEMILLERO)
+  async crear(@Body() crearCronogramaDto: CronogramaDto): Promise<any> {
     return await this.cronogramaService.crear(crearCronogramaDto);
   }
 
@@ -44,27 +41,26 @@ export class CronogramaController {
   }
 
   @Put(':id')
-  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.COINVESTIGADOR, UserRole.INVESTIGADOR)
+  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.COINVESTIGADOR, UserRole.INVESTIGADOR, UserRole.LIDER_DE_SEMILLERO)
   async actualizar(
     @Param('id') id: string,
     @Body() actualizarCronogramaDto: CronogramaDto,
-  ): Promise<ICronograma> {
+  ): Promise<any> {
     return await this.cronogramaService.actualizar(id, actualizarCronogramaDto);
   }
 
   @Patch(':id')
-  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.COINVESTIGADOR, UserRole.INVESTIGADOR)
+  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.COINVESTIGADOR, UserRole.INVESTIGADOR, UserRole.LIDER_DE_SEMILLERO)
   async actualizarParcial(
     @Param('id') id: string,
     @Body() actualizarCronogramaDto: Partial<CronogramaDto>,
-  ): Promise<ICronograma> {
+  ): Promise<any> {
     return await this.cronogramaService.actualizar(id, actualizarCronogramaDto);
   }
 
   @Delete(':id')
-  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.COINVESTIGADOR, UserRole.INVESTIGADOR)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async eliminar(@Param('id') id: string) {
-    await this.cronogramaService.eliminar(id);
+  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.COINVESTIGADOR, UserRole.INVESTIGADOR, UserRole.LIDER_DE_SEMILLERO)
+  async eliminar(@Param('id') id: string): Promise<any> {
+    return await this.cronogramaService.eliminar(id);
   }
 }

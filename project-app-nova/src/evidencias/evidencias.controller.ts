@@ -6,8 +6,6 @@ import {
   Param,
   Post,
   Put,
-  Patch,
-  HttpCode,
   HttpStatus,
   UseGuards,
   UseInterceptors,
@@ -28,19 +26,15 @@ import { UserRole } from 'src/common/constants/roles.enum';
 export class EvidenciasController {
   constructor(private readonly evidenciaService: EvidenciasService) {}
 
-  /**
-   * Endpoint para subir una nueva evidencia.
-   * Utiliza FileInterceptor para procesar el archivo enviado en el campo 'archivo'.
-   */
   @Post('upload')
-  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.COINVESTIGADOR, UserRole.INVESTIGADOR)
+  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.COINVESTIGADOR, UserRole.INVESTIGADOR, UserRole.LIDER_DE_SEMILLERO)
   @UseInterceptors(FileInterceptor('archivo'))
   async uploadEvidencia(
-    @UploadedFile() file: Express.Multer.File, // Inyecta el archivo procesado por Multer
-    @Body() createEvidenciaDto: CreateEvidenciaDto, // Inyecta los datos del formulario
-    @Req() req: any, // Inyecta la petición para obtener el usuario
-  ): Promise<IEvidencia> {
-    const userId = req.user.id; // Se asume que el Guard de JWT añade el usuario a la request
+    @UploadedFile() file: Express.Multer.File, 
+    @Body() createEvidenciaDto: CreateEvidenciaDto, 
+    @Req() req: any, 
+  ): Promise<any> { // Se cambia el tipo de retorno a any para aceptar la respuesta estandarizada
+    const userId = req.user.id; 
     return await this.evidenciaService.crear(createEvidenciaDto, file, userId);
   }
 
@@ -68,20 +62,18 @@ export class EvidenciasController {
     return await this.evidenciaService.consultarPorId(id);
   }
 
-  // NOTA: La actualización (PUT/PATCH) de una evidencia que incluye un archivo
   @Put(':id')
-  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.COINVESTIGADOR, UserRole.INVESTIGADOR)
+  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.COINVESTIGADOR, UserRole.INVESTIGADOR, UserRole.LIDER_DE_SEMILLERO)
   async actualizar(
     @Param('id') id: string,
     @Body() actualizarEvidenciasDto: Partial<CreateEvidenciaDto>,
-  ): Promise<IEvidencia> {
+  ): Promise<any> { // Se cambia el tipo de retorno a any
     return await this.evidenciaService.actualizar(id, actualizarEvidenciasDto);
   }
 
   @Delete(':id')
-  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.COINVESTIGADOR, UserRole.INVESTIGADOR)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async eliminar(@Param('id') id: string) {
-    await this.evidenciaService.eliminar(id);
+  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.COINVESTIGADOR, UserRole.INVESTIGADOR, UserRole.LIDER_DE_SEMILLERO)
+  async eliminar(@Param('id') id: string): Promise<any> { // Se cambia el tipo y se elimina @HttpCode
+    return await this.evidenciaService.eliminar(id);
   }
 }

@@ -11,7 +11,7 @@ export class SemilleroService {
     private readonly semilleroModel: Model<ISemillero>,
   ) {}
 
-  async crear(CrearSemilleroDTO: SemilleroDTO): Promise<ISemillero> {
+  async crear(CrearSemilleroDTO: SemilleroDTO) {
     const { Nombre_Semillero } = CrearSemilleroDTO;
 
     const semilleroExistente = await this.semilleroModel.findOne({ Nombre_Semillero }).exec();
@@ -21,7 +21,12 @@ export class SemilleroService {
     }
 
     const nuevoSemillero = new this.semilleroModel(CrearSemilleroDTO);
-    return await nuevoSemillero.save();
+    const semilleroGuardado = await nuevoSemillero.save();
+
+    return {
+      message: 'Semillero creado con éxito.',
+      data: semilleroGuardado,
+    };
   }
 
   async ConsultarTodos(): Promise<ISemillero[]> {
@@ -36,10 +41,7 @@ export class SemilleroService {
     return semillero;
   }
 
-  async actualizar(
-    id: string,
-    actualizarSemilleroDto: Partial<SemilleroDTO>,
-  ): Promise<ISemillero> {
+  async actualizar(id: string, actualizarSemilleroDto: Partial<SemilleroDTO>) {
     const semilleroActualizado = await this.semilleroModel
       .findByIdAndUpdate(id, actualizarSemilleroDto, {
         new: true,
@@ -50,14 +52,20 @@ export class SemilleroService {
     if (!semilleroActualizado) {
       throw new NotFoundException(`Semillero con ID "${id}" no encontrado.`);
     }
-    return semilleroActualizado;
+
+    return {
+      message: 'Semillero actualizado con éxito.',
+      data: semilleroActualizado,
+    };
   }
 
-  async eliminar(id: string): Promise<ISemillero> {
+  async eliminar(id: string) {
     const semilleroEliminado = await this.semilleroModel.findByIdAndDelete(id).exec();
     if (!semilleroEliminado) {
       throw new NotFoundException(`Semillero con ID "${id}" no encontrado.`);
     }
-    return semilleroEliminado;
+    return {
+      message: `Semillero con ID "${id}" eliminado con éxito.`,
+    };
   }
 }

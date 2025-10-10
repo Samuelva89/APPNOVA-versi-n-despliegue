@@ -15,10 +15,9 @@ export class InstructoresService {
     private readonly instructoresModel: Model<IInstructores>,
   ) {}
 
-  async crear(crearInstructoresDto: instructoresDto): Promise<IInstructores> {
+  async crear(crearInstructoresDto: instructoresDto) {
     const { Documento_Identidad, Email } = crearInstructoresDto;
 
-    // Lógica para verificar duplicados antes de guardar
     const instructorExistente = await this.instructoresModel
       .findOne({
         $or: [{ Documento_Identidad }, { Email }],
@@ -32,7 +31,12 @@ export class InstructoresService {
     }
 
     const nuevoInstructor = new this.instructoresModel(crearInstructoresDto);
-    return await nuevoInstructor.save();
+    const instructorGuardado = await nuevoInstructor.save();
+
+    return {
+      message: 'Instructor creado con éxito.',
+      data: instructorGuardado,
+    };
   }
 
   async consultarTodos(): Promise<IInstructores[]> {
@@ -47,10 +51,7 @@ export class InstructoresService {
     return instructor;
   }
 
-  async actualizar(
-    id: string,
-    actualizarInstructoresDto: Partial<instructoresDto>,
-  ): Promise<IInstructores> {
+  async actualizar(id: string, actualizarInstructoresDto: Partial<instructoresDto>) {
     const instructorActualizado = await this.instructoresModel
       .findByIdAndUpdate(id, actualizarInstructoresDto, {
         new: true,
@@ -62,16 +63,21 @@ export class InstructoresService {
       throw new NotFoundException(`Instructor con ID "${id}" no encontrado.`);
     }
 
-    return instructorActualizado;
+    return {
+      message: 'Instructor actualizado con éxito.',
+      data: instructorActualizado,
+    };
   }
 
-  async eliminar(id: string): Promise<IInstructores> {
+  async eliminar(id: string) {
     const instructorEliminado = await this.instructoresModel
       .findByIdAndDelete(id)
       .exec();
     if (!instructorEliminado) {
       throw new NotFoundException(`Instructor con ID "${id}" no encontrado.`);
     }
-    return instructorEliminado;
+    return {
+      message: `Instructor con ID "${id}" eliminado con éxito.`,
+    };
   }
 }

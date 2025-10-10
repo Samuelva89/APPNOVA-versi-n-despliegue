@@ -10,10 +10,9 @@ export class AprendizService {
     @InjectModel('Aprendiz') private readonly aprendizModel: Model<IAprendiz>,
   ) {}
 
-  async crear(crearAprendizDto: AprendizDto): Promise<IAprendiz> {
+  async crear(crearAprendizDto: AprendizDto) {
     const { documentoIdentidad, correoElectronico } = crearAprendizDto;
 
-    // Lógica para verificar duplicados antes de guardar
     const aprendizExistente = await this.aprendizModel.findOne({
       $or: [{ documentoIdentidad }, { correoElectronico }],
     }).exec();
@@ -23,7 +22,12 @@ export class AprendizService {
     }
 
     const nuevoAprendiz = new this.aprendizModel(crearAprendizDto);
-    return await nuevoAprendiz.save();
+    const aprendizGuardado = await nuevoAprendiz.save();
+
+    return {
+      message: 'Aprendiz creado con éxito.',
+      data: aprendizGuardado,
+    };
   }
 
   async consultarTodos(): Promise<IAprendiz[]> {
@@ -38,10 +42,7 @@ export class AprendizService {
     return aprendiz;
   }
 
-  async actualizar(
-    id: string,
-    actualizarAprendizDto: Partial<AprendizDto>,
-  ): Promise<IAprendiz> {
+  async actualizar(id: string, actualizarAprendizDto: Partial<AprendizDto>) {
     const aprendizActualizado = await this.aprendizModel
       .findByIdAndUpdate(id, actualizarAprendizDto, {
         new: true,
@@ -53,14 +54,19 @@ export class AprendizService {
       throw new NotFoundException(`Aprendiz con ID "${id}" no encontrado.`);
     }
 
-    return aprendizActualizado;
+    return {
+      message: 'Aprendiz actualizado con éxito.',
+      data: aprendizActualizado,
+    };
   }
 
-  async eliminar(id: string): Promise<IAprendiz> {
+  async eliminar(id: string) {
     const aprendizEliminado = await this.aprendizModel.findByIdAndDelete(id).exec();
     if (!aprendizEliminado) {
       throw new NotFoundException(`Aprendiz con ID "${id}" no encontrado.`);
     }
-    return aprendizEliminado;
+    return {
+      message: `Aprendiz con ID "${id}" eliminado con éxito.`,
+    };
   }
 }

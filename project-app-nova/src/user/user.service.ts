@@ -7,11 +7,9 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel('User') private readonly userModel: Model<IUser>) {
-    this.userModel = userModel;
-  }
+  constructor(@InjectModel('User') private readonly userModel: Model<IUser>) {}
 
-  async crear(crearUserDto: UserDto): Promise<IUser> {
+  async crear(crearUserDto: UserDto) {
     const { email, password, ...restOfDto } = crearUserDto;
 
     const userExistente = await this.userModel.findOne({ email }).exec();
@@ -27,7 +25,14 @@ export class UserService {
       password: hashedPassword,
     });
 
-    return await nuevoUser.save();
+    const userGuardado = await nuevoUser.save();
+    const result = userGuardado.toObject();
+    delete result.password;
+
+    return {
+      message: 'Usuario creado con éxito.',
+      data: result,
+    };
   }
 
   async findOneByEmail(email: string): Promise<IUser | null> {
@@ -46,7 +51,7 @@ export class UserService {
     return user;
   }
 
-  async actualizar(id: string, actualizarUserDto: Partial<UserDto>): Promise<IUser> {
+  async actualizar(id: string, actualizarUserDto: Partial<UserDto>) {
     const { password } = actualizarUserDto;
     if (password) {
       const salt = await bcrypt.genSalt();
@@ -60,10 +65,23 @@ export class UserService {
     if (!userActualizado) {
       throw new NotFoundException(`Usuario con ID "${id}" no encontrado.`);
     }
-    return userActualizado;
+
+    const result = userActualizado.toObject();
+    delete result.password;
+
+    return {
+      message: 'Usuario actualizado con éxito.',
+      data: result,
+    };
   }
 
-  async eliminar(id: string): Promise<IUser | null> {
-    return await this.userModel.findByIdAndDelete(id).exec();
+  async eliminar(id: string) {
+    const userEliminado = await this.userModel.findByIdAndDelete(id).exec();
+    if (!userEliminado) {
+      throw new NotFoundException(`Usuario con ID "${id}" no encontrado.`);
+    }
+    return {
+      message: `Usuario con ID "${id}" eliminado con éxito.`,
+    };
   }
 }

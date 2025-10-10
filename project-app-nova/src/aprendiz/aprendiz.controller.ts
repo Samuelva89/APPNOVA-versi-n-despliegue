@@ -7,8 +7,6 @@ import {
   Post,
   Put,
   Patch,
-  HttpCode,
-  HttpStatus,
   UseGuards,
 } from '@nestjs/common';
 import { AprendizService } from './aprendiz.service';
@@ -25,8 +23,8 @@ export class AprendizController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @HttpCode(HttpStatus.CREATED)
-  async crear(@Body() crearAprendizDto: AprendizDto): Promise<IAprendiz> {
+  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.LIDER_DE_SEMILLERO)
+  async crear(@Body() crearAprendizDto: AprendizDto): Promise<any> {
     return await this.aprendizService.crear(crearAprendizDto);
   }
 
@@ -46,27 +44,28 @@ export class AprendizController {
 
   @Put(':id')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.LIDER_DE_SEMILLERO)
   async actualizarCompleto(
     @Param('id') id: string,
     @Body() actualizarAprendizDto: AprendizDto,
-  ): Promise<IAprendiz> {
+  ): Promise<any> {
     return await this.aprendizService.actualizar(id, actualizarAprendizDto);
   }
 
   @Patch(':id')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(UserRole.LIDER_DE_PROYECTO)
+  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.LIDER_DE_SEMILLERO)
   async actualizarParcial(
     @Param('id') id: string,
     @Body() actualizarAprendizDto: Partial<AprendizDto>,
-  ): Promise<IAprendiz> {
+  ): Promise<any> {
     return await this.aprendizService.actualizar(id, actualizarAprendizDto);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async eliminar(@Param('id') id: string): Promise<void> {
-    await this.aprendizService.eliminar(id);
+  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.LIDER_DE_SEMILLERO)
+  async eliminar(@Param('id') id: string): Promise<any> {
+    return await this.aprendizService.eliminar(id);
   }
 }

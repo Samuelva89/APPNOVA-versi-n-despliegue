@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ICronograma } from './dto/cronograma.model';
 import { CronogramaDto } from './dto/cronograma.dto';
@@ -11,11 +11,13 @@ export class CronogramaService {
     private readonly cronogramaModel: Model<ICronograma>,
   ) {}
 
-  async crear(crearCronogramaDto: CronogramaDto): Promise<ICronograma> {
-    // The original unique check for 'actividad_general' was removed because the field no longer exists.
-    // A new validation logic might be needed depending on business rules (e.g., one cronograma per project).
+  async crear(crearCronogramaDto: CronogramaDto) {
     const nuevoCronograma = new this.cronogramaModel(crearCronogramaDto);
-    return await nuevoCronograma.save();
+    const cronogramaGuardado = await nuevoCronograma.save();
+    return {
+      message: 'Cronograma creado con éxito.',
+      data: cronogramaGuardado,
+    };
   }
 
   async consultarTodos(): Promise<ICronograma[]> {
@@ -30,12 +32,9 @@ export class CronogramaService {
     return cronograma;
   }
 
-  async actualizar(
-    id: string,
-    actualizarCrronogramaDto: Partial<CronogramaDto>,
-  ): Promise<ICronograma> {
+  async actualizar(id: string, actualizarCronogramaDto: Partial<CronogramaDto>) {
     const cronogramaActualizado = await this.cronogramaModel
-      .findByIdAndUpdate(id, actualizarCrronogramaDto, {
+      .findByIdAndUpdate(id, actualizarCronogramaDto, {
         new: true,
         runValidators: true,
       })
@@ -44,14 +43,20 @@ export class CronogramaService {
     if (!cronogramaActualizado) {
       throw new NotFoundException(`Cronograma con ID "${id}" no encontrado.`);
     }
-    return cronogramaActualizado;
+
+    return {
+      message: 'Cronograma actualizado con éxito.',
+      data: cronogramaActualizado,
+    };
   }
 
-  async eliminar(id: string): Promise<ICronograma> {
+  async eliminar(id: string) {
     const cronogramaEliminado = await this.cronogramaModel.findByIdAndDelete(id).exec();
     if (!cronogramaEliminado) {
       throw new NotFoundException(`Cronograma con ID "${id}" no encontrado.`);
     }
-    return cronogramaEliminado;
+    return {
+      message: `Cronograma con ID "${id}" eliminado con éxito.`,
+    };
   }
 }

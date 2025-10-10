@@ -17,7 +17,7 @@ export class ProjectoService {
     @InjectModel('Projecto') private readonly ProjectoModel: Model<IProjecto>,
   ) {}
 
-  async crear(crearProjectoDto: ProjectoDto, user: any): Promise<IProjecto> {
+  async crear(crearProjectoDto: ProjectoDto, user: any) {
     const { tituloDeProyecto } = crearProjectoDto;
     const projectoExistente = await this.ProjectoModel.findOne({
       tituloDeProyecto,
@@ -32,7 +32,12 @@ export class ProjectoService {
     }
 
     const nuevoProjecto = new this.ProjectoModel(crearProjectoDto);
-    return await nuevoProjecto.save();
+    const proyectoGuardado = await nuevoProjecto.save();
+
+    return {
+      message: 'Proyecto creado con éxito.',
+      data: proyectoGuardado,
+    };
   }
 
   async consultarTodos(user: any): Promise<IProjecto[]> {
@@ -91,8 +96,6 @@ export class ProjectoService {
     const esLider = user.roles.includes(UserRole.LIDER_DE_PROYECTO);
     const esDinamizador = user.roles.includes(UserRole.DINAMIZADOR);
 
-    // Note: With .lean(), populated documents are plain objects.
-    // We must compare IDs directly instead of using the .equals() method.
     const esLiderDeSuSemillero =
       user.semilleroId &&
       projecto.semillero.some(
@@ -126,8 +129,7 @@ export class ProjectoService {
     id: string,
     actualizarProjectoDto: Partial<ProjectoDto>,
     user: any,
-  ): Promise<IProjecto> {
-    // consultarPorId already performs the auth check
+  ) {
     await this.consultarPorId(id, user);
 
     const projectoActualizado = await this.ProjectoModel.findByIdAndUpdate(
@@ -142,21 +144,32 @@ export class ProjectoService {
     if (!projectoActualizado) {
       throw new NotFoundException(`Proyecto con ID "${id}" no encontrado.`);
     }
-    return projectoActualizado;
+    
+    return {
+      message: 'Proyecto actualizado con éxito.',
+      data: projectoActualizado,
+    };
   }
 
-  async eliminar(id: string, user: any): Promise<IProjecto> {
+  async eliminar(id: string, user: any) {
     const esLider = user.roles.includes(UserRole.LIDER_DE_PROYECTO);
-    if (!esLider) {
+    const esSuperAdmin = user.roles.includes(UserRole.LIDER_DE_SEMILLERO);
+
+    if (!esLider && !esSuperAdmin) {
       throw new ForbiddenException(
-        'Solo el LIDER DE PROYECTO puede realizar esta accion',
+        'Solo el LIDER DE PROYECTO o Super Admin puede realizar esta acción',
       );
     }
+
     const projectoEliminado =
       await this.ProjectoModel.findByIdAndDelete(id).exec();
+      
     if (!projectoEliminado) {
       throw new NotFoundException(`Proyecto con ID "${id}" no encontrado.`);
     }
-    return projectoEliminado;
+
+    return {
+      message: `Proyecto con ID "${id}" eliminado con éxito.`,
+    };
   }
 }
