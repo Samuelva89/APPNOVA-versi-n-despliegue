@@ -55,7 +55,7 @@ export class Projecto extends Document {
   @Prop({ required: true })
   objetivoGeneral: string;
 
-  @Prop({ type: [String], required: true })
+  @Prop({ type: String, required: true })
   objetivoEspecifico: string[];
 
   @Prop({ required: true })
@@ -121,7 +121,7 @@ export interface IProjecto extends Document {
   planteamientoDelProblema: string;
   estadoDelArte: string;
   objetivoGeneral: string;
-  objetivoEspecifico: string[];
+  objetivoEspecifico: string[];//lista de objetivos
   beneficiarios: string;
   impactosEconomicoSocialAmbientalEsperados: string;
   resultadosEsperados: string;

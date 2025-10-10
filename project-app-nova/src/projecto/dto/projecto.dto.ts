@@ -16,7 +16,7 @@ export enum ProjectoEstado {
 export class ProjectoDto {
   @IsDateString(
     {},
-    { message: 'La fecha de inicio debe tener formato válido (YYYY-MM-DD).' },
+    { message: 'La fecha de inicio debe tener formato válido (YYYY-MM-DD).'},
   )
   @IsNotEmpty({ message: 'La fecha de inicio es obligatoria.' })
   fechaInicio: Date;
@@ -82,7 +82,7 @@ export class ProjectoDto {
 
   @IsString()
   @IsNotEmpty({ message: 'Los objetivos específicos son obligatorios.' })
-  objetivoEspecifico: [string];//cambiar a lista m,s
+  objetivoEspecifico: string[];//cambiar a lista m,s
 
   @IsString()
   @IsNotEmpty({ message: 'Los beneficiarios son obligatorios.' })

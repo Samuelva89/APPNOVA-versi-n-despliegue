@@ -15,4 +15,4 @@ services:
       - key: DATABASE_URL
         # ¡IMPORTANTE! Este valor se debe configurar de forma segura
         # en el dashboard de Render, en la sección de "Environment Variables".
-        value: "TU_URL_DE_BASE_DE_DATOS_AQUI"
+        value: "MONGODB_URI"
