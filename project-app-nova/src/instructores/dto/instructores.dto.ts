@@ -7,7 +7,7 @@ export class instructoresDto {
 
   @IsEmail()
   @IsNotEmpty()
-  Email: string;
+  email: string;
 
   @IsNumber()
   @IsNotEmpty()

@@ -51,52 +51,53 @@ describe('InstructoresService (Integration)', () => {
   describe('crear', () => {
     it('should create a new instructor successfully', async () => {
       const instructorDto: instructoresDto = {
-        Nombre_Instructor: 'John Doe',
-        Email: 'john.doe@example.com',
-        Documento_Identidad: 123456789,
-        Numero_de_contacto: 1234567890,
+        nombreInstructor: 'John Doe',
+        email: 'john.doe@example.com',
+        documentoIdentidad: 123456789,
+        numeroDeContacto: 1234567890,
       };
 
-      const createdInstructor = await service.crear(instructorDto);
+      const result = await service.crear(instructorDto);
+      const createdInstructor = result.data;
 
       expect(createdInstructor).toBeDefined();
-      expect(createdInstructor.Nombre_Instructor).toEqual(instructorDto.Nombre_Instructor);
-      expect(createdInstructor.Email).toEqual(instructorDto.Email);
+      expect(createdInstructor.nombreInstructor).toEqual(instructorDto.nombreInstructor);
+      expect(createdInstructor.email).toEqual(instructorDto.email);
     });
 
-    it('should throw ConflictException if Documento_Identidad already exists', async () => {
+    it('should throw ConflictException if documentoIdentidad already exists', async () => {
       const instructorDto1: instructoresDto = {
-        Nombre_Instructor: 'Jane Doe',
-        Email: 'jane.doe@example.com',
-        Documento_Identidad: 987654321,
-        Numero_de_contacto: 9876543210,
+        nombreInstructor: 'Jane Doe',
+        email: 'jane.doe@example.com',
+        documentoIdentidad: 987654321,
+        numeroDeContacto: 9876543210,
       };
       await service.crear(instructorDto1);
 
       const instructorDto2: instructoresDto = {
-        Nombre_Instructor: 'Jim Doe',
-        Email: 'jim.doe@example.com',
-        Documento_Identidad: 987654321, // Duplicate Documento_Identidad
-        Numero_de_contacto: 1122334455,
+        nombreInstructor: 'Jim Doe',
+        email: 'jim.doe@example.com',
+        documentoIdentidad: 987654321, // Duplicate documentoIdentidad
+        numeroDeContacto: 1122334455,
       };
 
       await expect(service.crear(instructorDto2)).rejects.toThrow(ConflictException);
     });
 
-     it('should throw ConflictException if Email already exists', async () => {
+     it('should throw ConflictException if email already exists', async () => {
       const instructorDto1: instructoresDto = {
-        Nombre_Instructor: 'Jane Doe',
-        Email: 'duplicate.email@example.com',
-        Documento_Identidad: 111222333,
-        Numero_de_contacto: 9876543210,
+        nombreInstructor: 'Jane Doe',
+        email: 'duplicate.email@example.com',
+        documentoIdentidad: 111222333,
+        numeroDeContacto: 9876543210,
       };
       await service.crear(instructorDto1);
 
       const instructorDto2: instructoresDto = {
-        Nombre_Instructor: 'Jim Doe',
-        Email: 'duplicate.email@example.com', // Duplicate Email
-        Documento_Identidad: 444555666,
-        Numero_de_contacto: 1122334455,
+        nombreInstructor: 'Jim Doe',
+        email: 'duplicate.email@example.com', // Duplicate email
+        documentoIdentidad: 444555666,
+        numeroDeContacto: 1122334455,
       };
 
       await expect(service.crear(instructorDto2)).rejects.toThrow(ConflictException);
@@ -106,16 +107,16 @@ describe('InstructoresService (Integration)', () => {
   describe('consultarTodos', () => {
     it('should return all instructors', async () => {
       await service.crear({
-        Nombre_Instructor: 'Instructor A',
-        Email: 'a@a.com',
-        Documento_Identidad: 1,
-        Numero_de_contacto: 123,
+        nombreInstructor: 'Instructor A',
+        email: 'a@a.com',
+        documentoIdentidad: 1,
+        numeroDeContacto: 123,
       });
       await service.crear({
-        Nombre_Instructor: 'Instructor B',
-        Email: 'b@b.com',
-        Documento_Identidad: 2,
-        Numero_de_contacto: 456,
+        nombreInstructor: 'Instructor B',
+        email: 'b@b.com',
+        documentoIdentidad: 2,
+        numeroDeContacto: 456,
       });
 
       const instructors = await service.consultarTodos();

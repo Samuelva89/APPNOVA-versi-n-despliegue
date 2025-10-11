@@ -16,11 +16,11 @@ export class InstructoresService {
   ) {}
 
   async crear(crearInstructoresDto: instructoresDto) {
-    const { documentoIdentidad, Email } = crearInstructoresDto;
+    const { documentoIdentidad, email } = crearInstructoresDto;
 
     const instructorExistente = await this.instructoresModel
       .findOne({
-        $or: [{ documentoIdentidad }, { Email }],
+        $or: [{ documentoIdentidad }, { email }],
       })
       .exec();
 

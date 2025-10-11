@@ -43,7 +43,7 @@ export class ProjectoService {
   async consultarTodos(user: any): Promise<IProjecto[]> {
     const populateOptions = [
       { path: 'aprendices', select: 'nombreCompleto correoElectronico' },
-      { path: 'instructores', select: 'Nombre_Instructor Email' },
+      { path: 'instructores', select: 'nombreInstructor email' },
       { path: 'semillero', select: 'Nombre_Semillero' },
     ];
 
@@ -77,7 +77,7 @@ export class ProjectoService {
     const projecto = await this.ProjectoModel.findById(id)
       .populate([
         { path: 'aprendices', select: 'nombreCompleto correoElectronico' },
-        { path: 'instructores', select: 'Nombre_Instructor Email' },
+        { path: 'instructores', select: 'nombreInstructor email' },
         {
           path: 'cronograma',
           select: 'actividad_general fecha_inicio fecha_fin',

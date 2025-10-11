@@ -4,7 +4,7 @@ import { IProjecto } from 'src/projecto/dto/projecto.model';
 
 // Interfaz que representa un documento de Cronograma en MongoDB
 export interface ICronograma extends Document {
-  proyecto: IProjecto['_id'];
+  proyecto: IProjecto;
   centroDeFormacion: string;
   objetivosEspecificos: string[];
   actividades: string[];
@@ -18,7 +18,7 @@ export interface ICronograma extends Document {
 @Schema({ timestamps: true }) // createdAt y updatedAt automáticos
 export class Cronograma extends Document {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Projecto', required: true })
-  proyecto: IProjecto['_id'];
+  proyecto: MongooseSchema.Types.ObjectId;
   
   @Prop({ required: true })
   centroDeFormacion: string;

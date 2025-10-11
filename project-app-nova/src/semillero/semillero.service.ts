@@ -14,10 +14,10 @@ export class SemilleroService {
   async crear(CrearSemilleroDTO: SemilleroDTO) {
     const { nombreSemillero } = CrearSemilleroDTO;
 
-    const semilleroExistente = await this.semilleroModel.findOne({ Nombre_Semillero }).exec();
+    const semilleroExistente = await this.semilleroModel.findOne({ nombreSemillero }).exec();
 
     if (semilleroExistente) {
-      throw new ConflictException(`El semillero "${Nombre_Semillero}" ya existe.`);
+      throw new ConflictException(`El semillero "${nombreSemillero}" ya existe.`);
     }
 
     const nuevoSemillero = new this.semilleroModel(CrearSemilleroDTO);

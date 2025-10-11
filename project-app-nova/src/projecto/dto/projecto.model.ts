@@ -84,22 +84,22 @@ export class Projecto extends Document {
   anexos: string;
 
   @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Aprendiz' }] })
-  aprendices: IAprendiz[];
+  aprendices: MongooseSchema.Types.ObjectId[];
 
   @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Instructores' }] })
-  instructores: IInstructores[];
+  instructores: MongooseSchema.Types.ObjectId[];
 
-  @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'cronograma' }] })
-  cronograma: ICronograma[];
+  @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Cronograma' }] })
+  cronograma: MongooseSchema.Types.ObjectId[];
 
   @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Evidencia' }] })
-  evidencias: IEvidencia[];
+  evidencias: MongooseSchema.Types.ObjectId[];
 
   @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Seguimiento' }] })
-  seguimiento: ISeguimiento[];
+  seguimiento: MongooseSchema.Types.ObjectId[];
 
   @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Semillero' }] })
-  semillero: ISemillero[];
+  semillero: MongooseSchema.Types.ObjectId[];
 }
 
 // Interfaz que representa un documento de Projecto en MongoDB

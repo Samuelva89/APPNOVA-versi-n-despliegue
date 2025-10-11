@@ -90,11 +90,11 @@ export class Seguimiento extends Document {
   firmasOParticipacionVirtual: string[];
 
   // --- RELACIONES IMPORTANTES ---
-  @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'proyecto' }] })
+  @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Projecto' }] })
   proyecto: MongooseSchema.Types.ObjectId[];
 
   @Prop({
-    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'user' }],
+    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'User' }],
   })
   user: MongooseSchema.Types.ObjectId[];
 }

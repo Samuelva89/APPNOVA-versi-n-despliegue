@@ -3,7 +3,6 @@ import { Document, Schema as MongooseSchema } from 'mongoose';
 import { IAprendiz } from 'src/aprendiz/dto/aprendiz.model';
 import { UserRole } from 'src/common/constants/roles.enum';
 import { IInstructores } from 'src/instructores/dto/instructores.model';
-import { ISemillero } from 'src/semillero/dto/semillero.model';
 
 export interface IUser extends Document {
   nombreCompleto: string;
@@ -12,7 +11,6 @@ export interface IUser extends Document {
   roles: UserRole[];
   instructorId?: IInstructores;
   aprendizId?: IAprendiz;
-  semilleroId?: ISemillero;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -52,14 +50,6 @@ export class User extends Document {
     default: null,
   })
   aprendizId: MongooseSchema.Types.ObjectId;
-
-  @Prop({
-    type: MongooseSchema.Types.ObjectId,
-    ref: 'Semillero',
-    required: false,
-    default: null,
-  })
-  semilleroId: MongooseSchema.Types.ObjectId;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

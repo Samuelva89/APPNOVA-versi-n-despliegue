@@ -3,10 +3,10 @@ import { Document } from 'mongoose';
 
 // Interfaz que representa un documento de Instructor en MongoDB
 export interface IInstructores extends Document {
-  Nombre_Instructor: string;
-  Email: string;
-  Documento_Identidad: number;
-  Numero_de_contacto: number;
+  nombreInstructor: string;
+  email: string;
+  documentoIdentidad: number;
+  numeroDeContacto: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -14,16 +14,16 @@ export interface IInstructores extends Document {
 @Schema({ timestamps: true })
 export class Instructores extends Document {
   @Prop({ required: true })
-  Nombre_Instructor: string;
+  nombreInstructor: string;
 
   @Prop({ required: true, unique: true })
-  Email: string;
+  email: string;
 
   @Prop({ required: true, unique: true })
-  Documento_Identidad: number;
+  documentoIdentidad: number;
 
   @Prop({ required: true })
-  Numero_de_contacto: number;
+  numeroDeContacto: number;
 }
 
 export const InstructoresSchema = SchemaFactory.createForClass(Instructores);
