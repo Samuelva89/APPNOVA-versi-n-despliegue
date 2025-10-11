@@ -47,10 +47,10 @@ export class AuthService {
 
   async register(userDto: RegisterAuthDto) {
     // The hashing responsibility is now in UserService.
-    const newUser = await this.userService.crear(userDto);
+    const newUserResponse = await this.userService.crear(userDto);
 
-    const result = (newUser as any).toObject();
-    delete result.password;
-    return result;
+    const plainUserObject = newUserResponse.data;
+    delete plainUserObject.password;
+    return plainUserObject;
   }
 }
