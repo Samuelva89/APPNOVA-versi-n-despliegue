@@ -22,10 +22,11 @@ export class SemilleroService {
 
     const nuevoSemillero = new this.semilleroModel(CrearSemilleroDTO);
     const semilleroGuardado = await nuevoSemillero.save();
+    const resultadoLimpio = semilleroGuardado.toObject();
 
     return {
       message: 'Semillero creado con éxito.',
-      data: semilleroGuardado,
+      data: resultadoLimpio,
     };
   }
 
@@ -34,7 +35,7 @@ export class SemilleroService {
   }
 
   async consultarID(id: string): Promise<ISemillero> {
-    const semillero = await this.semilleroModel.findById(id).exec();
+    const semillero = await this.semilleroModel.findById(id).lean().exec();
     if (!semillero) {
       throw new NotFoundException(`Semillero con ID "${id}" no encontrado.`);
     }
@@ -47,6 +48,7 @@ export class SemilleroService {
         new: true,
         runValidators: true,
       })
+      .lean()
       .exec();
 
     if (!semilleroActualizado) {

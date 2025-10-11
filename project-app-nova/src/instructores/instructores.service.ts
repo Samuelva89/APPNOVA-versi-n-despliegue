@@ -32,10 +32,11 @@ export class InstructoresService {
 
     const nuevoInstructor = new this.instructoresModel(crearInstructoresDto);
     const instructorGuardado = await nuevoInstructor.save();
+    const resultadoLimpio = instructorGuardado.toObject();
 
     return {
       message: 'Instructor creado con éxito.',
-      data: instructorGuardado,
+      data: resultadoLimpio,
     };
   }
 
@@ -44,7 +45,7 @@ export class InstructoresService {
   }
 
   async consultarPorId(id: string): Promise<IInstructores> {
-    const instructor = await this.instructoresModel.findById(id).exec();
+    const instructor = await this.instructoresModel.findById(id).lean().exec();
     if (!instructor) {
       throw new NotFoundException(`Instructor con ID "${id}" no encontrado.`);
     }
@@ -57,6 +58,7 @@ export class InstructoresService {
         new: true,
         runValidators: true,
       })
+      .lean()
       .exec();
 
     if (!instructorActualizado) {

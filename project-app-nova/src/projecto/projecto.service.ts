@@ -33,10 +33,11 @@ export class ProjectoService {
 
     const nuevoProjecto = new this.ProjectoModel(crearProjectoDto);
     const proyectoGuardado = await nuevoProjecto.save();
+    const resultadoLimpio = proyectoGuardado.toObject();
 
     return {
       message: 'Proyecto creado con éxito.',
-      data: proyectoGuardado,
+      data: resultadoLimpio,
     };
   }
 
@@ -139,7 +140,7 @@ export class ProjectoService {
         new: true,
         runValidators: true,
       },
-    ).exec();
+    ).lean().exec();
 
     if (!projectoActualizado) {
       throw new NotFoundException(`Proyecto con ID "${id}" no encontrado.`);

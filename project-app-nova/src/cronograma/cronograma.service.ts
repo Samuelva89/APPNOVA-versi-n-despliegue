@@ -14,9 +14,11 @@ export class CronogramaService {
   async crear(crearCronogramaDto: CronogramaDto) {
     const nuevoCronograma = new this.cronogramaModel(crearCronogramaDto);
     const cronogramaGuardado = await nuevoCronograma.save();
+    const resultadoLimpio = cronogramaGuardado.toObject();
+
     return {
       message: 'Cronograma creado con éxito.',
-      data: cronogramaGuardado,
+      data: resultadoLimpio,
     };
   }
 
@@ -25,7 +27,7 @@ export class CronogramaService {
   }
 
   async consultarPorId(id: string): Promise<ICronograma> {
-    const cronograma = await this.cronogramaModel.findById(id).exec();
+    const cronograma = await this.cronogramaModel.findById(id).lean().exec();
     if (!cronograma) {
       throw new NotFoundException(`Cronograma con ID "${id}" no encontrado.`);
     }
@@ -38,6 +40,7 @@ export class CronogramaService {
         new: true,
         runValidators: true,
       })
+      .lean()
       .exec();
 
     if (!cronogramaActualizado) {

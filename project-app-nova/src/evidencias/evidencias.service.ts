@@ -39,10 +39,11 @@ export class EvidenciasService {
     });
 
     const evidenciaGuardada = await nuevaEvidencia.save();
+    const resultadoLimpio = evidenciaGuardada.toObject();
 
     return {
       message: 'Evidencia creada con éxito.',
-      data: evidenciaGuardada,
+      data: resultadoLimpio,
     };
   }
 
@@ -55,7 +56,7 @@ export class EvidenciasService {
   }
 
   async consultarPorId(id: string): Promise<IEvidencia> {
-    const evidencia = await this.evidenciaModel.findById(id).exec();
+    const evidencia = await this.evidenciaModel.findById(id).lean().exec();
     if (!evidencia) {
       throw new NotFoundException(`Evidencia con ID "${id}" no encontrada.`);
     }
@@ -71,6 +72,7 @@ export class EvidenciasService {
         new: true,
         runValidators: true,
       })
+      .lean()
       .exec();
 
     if (!evidenciaActualizada) {
@@ -84,7 +86,7 @@ export class EvidenciasService {
   }
 
   async eliminar(id: string) {
-    const evidencia = await this.evidenciaModel.findById(id).exec();
+    const evidencia = await this.evidenciaModel.findById(id).lean().exec();
     if (!evidencia) {
       throw new NotFoundException(`Evidencia con ID "${id}" no encontrada.`);
     }

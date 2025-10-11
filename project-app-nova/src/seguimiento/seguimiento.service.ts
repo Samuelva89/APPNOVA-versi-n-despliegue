@@ -27,10 +27,11 @@ export class SeguimientoService {
 
     const nuevaObservacion = new this.seguimientoModel(crearObservacionSegDto);
     const observacionGuardada = await nuevaObservacion.save();
+    const resultadoLimpio = observacionGuardada.toObject();
 
     return {
       message: 'Observación de seguimiento creada con éxito.',
-      data: observacionGuardada,
+      data: resultadoLimpio,
     };
   }
 
@@ -65,6 +66,7 @@ export class SeguimientoService {
         new: true,
         runValidators: true,
       })
+      .lean()
       .exec();
 
     if (!seguimientoActualizado) {

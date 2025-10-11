@@ -23,10 +23,11 @@ export class AprendizService {
 
     const nuevoAprendiz = new this.aprendizModel(crearAprendizDto);
     const aprendizGuardado = await nuevoAprendiz.save();
+    const resultadoLimpio = aprendizGuardado.toObject();
 
     return {
       message: 'Aprendiz creado con éxito.',
-      data: aprendizGuardado,
+      data: resultadoLimpio,
     };
   }
 
@@ -35,7 +36,7 @@ export class AprendizService {
   }
 
   async consultarPorId(id: string): Promise<IAprendiz> {
-    const aprendiz = await this.aprendizModel.findById(id).exec();
+    const aprendiz = await this.aprendizModel.findById(id).lean().exec();
     if (!aprendiz) {
       throw new NotFoundException(`Aprendiz con ID "${id}" no encontrado.`);
     }
@@ -48,6 +49,7 @@ export class AprendizService {
         new: true,
         runValidators: true,
       })
+      .lean()
       .exec();
 
     if (!aprendizActualizado) {
