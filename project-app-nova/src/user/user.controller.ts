@@ -11,6 +11,12 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { RegisterAuthDto } from 'src/auth/dto/auth.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/decorators/roles.decorator';
+import { UserRole } from 'src/common/constants/roles.enum';
+import { IUser } from './dto/user.model';
+import { UserDto } from './dto/user.dto';
 
 @Controller('user')
 export class UserController {

@@ -3,6 +3,7 @@ import { Document, Schema as MongooseSchema } from 'mongoose';
 import { IAprendiz } from 'src/aprendiz/dto/aprendiz.model';
 import { UserRole } from 'src/common/constants/roles.enum';
 import { IInstructores } from 'src/instructores/dto/instructores.model';
+import { ISemillero } from 'src/semillero/dto/semillero.model';
 
 export interface IUser extends Document {
   nombreCompleto: string;

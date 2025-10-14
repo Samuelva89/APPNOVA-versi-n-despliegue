@@ -77,7 +77,7 @@ export class ProjectoService {
 
 
 
-    const projectData: Partial<IProjecto> = { ...restOfDto, tituloDeProyecto };
+    const projectData: any = { ...restOfDto, tituloDeProyecto };
 
 
 
