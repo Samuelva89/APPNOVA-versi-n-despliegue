@@ -23,6 +23,7 @@ export class UserService {
       ...restOfDto,
       email,
       password: hashedPassword,
+      roles: crearUserDto.roles, // Añadir roles desde el DTO
     });
 
     const userGuardado = await nuevoUser.save();
