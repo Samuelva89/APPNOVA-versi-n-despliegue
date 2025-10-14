@@ -33,11 +33,10 @@ export class ProjectoService {
 
     const nuevoProjecto = new this.ProjectoModel(crearProjectoDto);
     const proyectoGuardado = await nuevoProjecto.save();
-    const resultadoLimpio = proyectoGuardado.toObject();
 
     return {
       message: 'Proyecto creado con éxito.',
-      data: resultadoLimpio,
+      data: proyectoGuardado,
     };
   }
 
