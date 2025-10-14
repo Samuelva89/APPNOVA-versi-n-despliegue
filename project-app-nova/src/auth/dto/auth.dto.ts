@@ -5,6 +5,7 @@ import {
   MinLength,
   IsArray,
   IsEnum,
+  IsOptional,
 } from 'class-validator';
 import { UserRole } from '../../common/constants/roles.enum';
 
@@ -37,4 +38,8 @@ export class RegisterAuthDto {
   @IsEnum(UserRole, { each: true })
   @IsNotEmpty({ message: 'Los roles son obligatorios' })
   roles: UserRole[];
+
+  @IsString()
+  @IsOptional()
+  semilleroId?: string;
 }

@@ -4,13 +4,14 @@ import { IUser } from './dto/user.model';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserDto } from './dto/user.dto';
 import * as bcrypt from 'bcrypt';
+import { RegisterAuthDto } from 'src/auth/dto/auth.dto';
 
 @Injectable()
 export class UserService {
   constructor(@InjectModel('User') private readonly userModel: Model<IUser>) {}
 
-  async crear(crearUserDto: UserDto) {
-    const { email, password, ...restOfDto } = crearUserDto;
+  async crear(crearUserDto: RegisterAuthDto) { // <-- DTO Cambiado aquí
+    const { email, password, roles, semilleroId, ...restOfDto } = crearUserDto;
 
     const userExistente = await this.userModel.findOne({ email }).exec();
     if (userExistente) {
@@ -23,7 +24,8 @@ export class UserService {
       ...restOfDto,
       email,
       password: hashedPassword,
-      roles: crearUserDto.roles, // Añadir roles desde el DTO
+      roles,
+      semilleroId, // <-- Nuevo campo añadido
     });
 
     const userGuardado = await nuevoUser.save();

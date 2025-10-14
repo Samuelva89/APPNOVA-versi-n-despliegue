@@ -16,5 +16,5 @@ export class AprendizDto {
   @IsDateString()
   fechaEnQueFinaliza: Date;
   @IsString()
-  proyectoAsignadoId: string;
+  proyectoAsignado: string;
 }

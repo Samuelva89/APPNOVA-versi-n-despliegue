@@ -11,6 +11,7 @@ export interface IUser extends Document {
   roles: UserRole[];
   instructorId?: IInstructores;
   aprendizId?: IAprendiz;
+  semilleroId?: ISemillero; // <-- Añadido para la relación
   createdAt: Date;
   updatedAt: Date;
 }
@@ -50,6 +51,14 @@ export class User extends Document {
     default: null,
   })
   aprendizId: MongooseSchema.Types.ObjectId;
+
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'Semillero',
+    required: false,
+    default: null,
+  })
+  semilleroId: MongooseSchema.Types.ObjectId;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -131,10 +131,6 @@ export class ProjectoDto {
   @IsOptional()
   cronograma: string[];
 
-  @IsArray({ message: 'El semillero debe ser un arreglo de IDs.' })
-  @IsString({ each: true })
-  @IsOptional()
-  semillero: string[];
 
   @IsArray({ message: 'El seguimiento debe ser un arreglo de IDs.' })
   @IsString({ each: true })

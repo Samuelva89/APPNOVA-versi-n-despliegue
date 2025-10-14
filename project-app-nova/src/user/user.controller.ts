@@ -10,12 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserDto } from './dto/user.dto';
-import { IUser } from './dto/user.model';
-import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { Roles } from 'src/decorators/roles.decorator';
-import { UserRole } from 'src/common/constants/roles.enum';
+import { RegisterAuthDto } from 'src/auth/dto/auth.dto';
 
 @Controller('user')
 export class UserController {
@@ -24,7 +19,7 @@ export class UserController {
   @Post()
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.LIDER_DE_SEMILLERO)
-  async crear(@Body() crearUserDto: UserDto): Promise<any> {
+  async crear(@Body() crearUserDto: RegisterAuthDto): Promise<any> { // <-- DTO Cambiado aquí
     return await this.userService.crear(crearUserDto);
   }
 

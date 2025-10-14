@@ -10,5 +10,6 @@ import { SemilleroSchema } from './dto/semillero.model';
   ],
   controllers: [SemilleroController],
   providers: [SemilleroService],
+  exports: [SemilleroService],
 })
 export class SemilleroModule {}
