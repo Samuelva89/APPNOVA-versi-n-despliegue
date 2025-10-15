@@ -55,7 +55,7 @@ export class Projecto extends Document {
   @Prop({ required: true })
   objetivoGeneral: string;
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: [String], required: true })
   objetivoEspecifico: string[];
 
   @Prop({ required: true })

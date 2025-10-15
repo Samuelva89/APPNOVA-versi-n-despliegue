@@ -45,121 +45,239 @@ export class ProjectoService {
 
 
 
-  async crear(crearProjectoDto: ProjectoDto, user: any): Promise<any> {
-
-    const { tituloDeProyecto, ...restOfDto } = crearProjectoDto;
+    async crear(crearProjectoDto: ProjectoDto, user: any): Promise<any> {
 
 
 
-    // 1. Verificar si el título del proyecto ya existe
-
-    const projectoExistente = await this.ProjectoModel.findOne({
-
-      tituloDeProyecto,
-
-    })
-
-      .lean()
-
-      .exec();
+      const { tituloDeProyecto, semillero: semilleroDto, ...restOfDto } = crearProjectoDto;
 
 
 
-    if (projectoExistente) {
-
-      throw new ConflictException(
-
-        `Ya existe un proyecto con el título "${tituloDeProyecto}".`,
-
-      );
-
-    }
+  
 
 
 
-    const projectData: any = { ...restOfDto, tituloDeProyecto };
+      // 1. Verificar si el título del proyecto ya existe
 
 
 
-    // 2. Lógica de asignación automática de Semillero
+      const projectoExistente = await this.ProjectoModel.findOne({ tituloDeProyecto })
 
-    if (user.roles.includes(UserRole.LIDER_DE_SEMILLERO)) {
 
-      if (!user.semilleroId) {
 
-        throw new ForbiddenException(
+        .lean()
 
-          'Como Líder de Semillero, tu usuario debe tener un semillero asociado.',
+
+
+        .exec();
+
+
+
+  
+
+
+
+      if (projectoExistente) {
+
+
+
+        throw new ConflictException(
+
+
+
+          `Ya existe un proyecto con el título "${tituloDeProyecto}".`,
+
+
 
         );
 
+
+
       }
 
-      // Verificamos que el semillero del token realmente exista
 
-      const semillero = await this.semilleroService.consultarID(user.semilleroId);
 
-      if (!semillero) {
+  
 
-        throw new NotFoundException(
 
-          `El semillero con ID "${user.semilleroId}" (asociado a tu usuario) no fue encontrado.`,
+
+      const projectData: any = { ...restOfDto, tituloDeProyecto };
+
+
+
+  
+
+
+
+      // 2. Lógica de asignación de Semillero HÍBRIDA
+
+
+
+      if (user.roles.includes(UserRole.LIDER_DE_SEMILLERO)) {
+
+
+
+        if (!user.semilleroId) {
+
+
+
+          throw new ForbiddenException(
+
+
+
+            'Como Líder de Semillero, tu usuario debe tener un semillero asociado.',
+
+
+
+          );
+
+
+
+        }
+
+
+
+        const semillero = await this.semilleroService.consultarID(user.semilleroId);
+
+
+
+        if (!semillero) {
+
+
+
+          throw new NotFoundException(
+
+
+
+            `El semillero con ID "${user.semilleroId}" (asociado a tu usuario) no fue encontrado.`,
+
+
+
+          );
+
+
+
+        }
+
+
+
+        projectData.semillero = [semillero._id];
+
+
+
+      } else {
+
+
+
+                        // Si es LIDER_DE_PROYECTO u otro rol, debe proveer el semillero en el body
+
+
+
+                        if (!semilleroDto || semilleroDto.length === 0) {
+
+
+
+          throw new BadRequestException('El campo "semillero" es obligatorio y no puede estar vacío.');
+
+
+
+        }
+
+
+
+        // Aquí se podría añadir una validación para asegurar que los IDs del DTO existen
+
+
+
+        projectData.semillero = semilleroDto;
+
+
+
+      }
+
+
+
+  
+
+
+
+      const nuevoProjecto = new this.ProjectoModel(projectData);
+
+
+
+  
+
+
+
+      // 3. Manejo de errores al guardar (try-catch)
+
+
+
+      try {
+
+
+
+        const proyectoGuardado = await nuevoProjecto.save();
+
+
+
+        return {
+
+
+
+          message: 'Proyecto creado con éxito.',
+
+
+
+          data: proyectoGuardado.toObject(),
+
+
+
+        };
+
+
+
+      } catch (error) {
+
+
+
+        if (error.name === 'CastError') {
+
+
+
+          throw new BadRequestException(
+
+
+
+            `Error de formato en uno de los IDs proporcionados. Revisa los IDs de semillero, aprendices o instructores. Detalle: ${error.message}`,
+
+
+
+          );
+
+
+
+        }
+
+
+
+        throw new InternalServerErrorException(
+
+
+
+          `Ocurrió un error inesperado al guardar el proyecto: ${error.message}`,
+
+
 
         );
 
-      }
 
-      // Asignamos el semillero al proyecto
-
-      projectData.semillero = [semillero._id];
-
-    }
-
-
-
-    const nuevoProjecto = new this.ProjectoModel(projectData);
-
-
-
-    // 3. Manejo de errores al guardar (try-catch)
-
-    try {
-
-      const proyectoGuardado = await nuevoProjecto.save();
-
-      return {
-
-        message: 'Proyecto creado con éxito.',
-
-        data: proyectoGuardado.toObject(),
-
-      };
-
-    } catch (error) {
-
-      // Si el error es de Mongoose por un ID mal formado (ej. en aprendices o instructores)
-
-      if (error.name === 'CastError') {
-
-        throw new BadRequestException(
-
-          `Error de formato en uno de los IDs proporcionados. Revisa los IDs de aprendices o instructores. Detalle: ${error.message}`,
-
-        );
 
       }
 
-      // Para cualquier otro error, lanzamos un error interno.
 
-      throw new InternalServerErrorException(
-
-        `Ocurrió un error inesperado al guardar el proyecto: ${error.message}`,
-
-      );
 
     }
-
-  }
 
 
 
@@ -424,9 +542,6 @@ export class ProjectoService {
       throw new NotFoundException(`Proyecto con ID "${id}" no encontrado.`);
 
     }
-
-
-
     return {
 
       message: `Proyecto con ID "${id}" eliminado con éxito.`,

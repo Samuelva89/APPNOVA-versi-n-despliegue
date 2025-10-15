@@ -13,6 +13,12 @@ import { SemilleroSchema } from '../semillero/dto/semillero.model';
 import { CronogramaSchema } from '../cronograma/dto/cronograma.model';
 import { EvidenciaSchema } from '../evidencias/dto/evidencias.model';
 import { SeguimientoSchema } from '../seguimiento/dto/seguimiento.model';
+import { SemilleroService } from '../semillero/semillero.service';
+
+// Mock de SemilleroService
+const mockSemilleroService = {
+  consultarID: jest.fn().mockResolvedValue({ _id: new Types.ObjectId(), nombreSemillero: 'Mock Semillero' }),
+};
 
 describe('ProjectoService (Integration)', () => {
   let service: ProjectoService;
@@ -48,12 +54,15 @@ describe('ProjectoService (Integration)', () => {
           { name: 'Aprendiz', schema: AprendizSchema },
           { name: 'Instructores', schema: InstructoresSchema },
           { name: 'Semillero', schema: SemilleroSchema },
-          { name: 'cronograma', schema: CronogramaSchema },
+          { name: 'Cronograma', schema: CronogramaSchema },
           { name: 'Evidencia', schema: EvidenciaSchema },
           { name: 'Seguimiento', schema: SeguimientoSchema },
         ]),
       ],
-      providers: [ProjectoService],
+      providers: [
+        ProjectoService,
+        { provide: SemilleroService, useValue: mockSemilleroService },
+      ],
     }).compile();
 
     service = module.get<ProjectoService>(ProjectoService);
@@ -88,9 +97,10 @@ describe('ProjectoService (Integration)', () => {
         impactosEconomicoSocialAmbientalEsperados: 'Impacto',
         resultadosEsperados: 'Resultados',
         estado: ProjectoEstado.EN_DESARROLLO,
-        aprendices: [otroUser.aprendizId]
+        aprendices: [otroUser.aprendizId],
+        semillero: [new Types.ObjectId().toHexString()],
     }, liderDeProyectoUser);
-    createdProjectoId = projecto._id.toString();
+    createdProjectoId = projecto.data._id.toString();
   });
 
   it('should be defined', () => {
@@ -120,12 +130,13 @@ describe('ProjectoService (Integration)', () => {
         impactosEconomicoSocialAmbientalEsperados: 'Impactos de prueba',
         resultadosEsperados: 'Resultados de prueba',
         estado: ProjectoEstado.EN_DESARROLLO,
+        semillero: [new Types.ObjectId().toHexString()],
       };
 
       const createdProjecto = await service.crear(projectoDto, liderDeProyectoUser);
 
       expect(createdProjecto).toBeDefined();
-      expect(createdProjecto.tituloDeProyecto).toEqual(projectoDto.tituloDeProyecto);
+      expect(createdProjecto.data.tituloDeProyecto).toEqual(projectoDto.tituloDeProyecto);
     });
 
     it('should throw ConflictException if project title already exists', async () => {
@@ -179,7 +190,7 @@ describe('ProjectoService (Integration)', () => {
     it('should update a project successfully', async () => {
         const updateDto: Partial<ProjectoDto> = { resumen: 'Resumen actualizado' };
         const updatedProject = await service.actualizar(createdProjectoId, updateDto, liderDeProyectoUser);
-        expect(updatedProject.resumen).toBe('Resumen actualizado');
+        expect(updatedProject.data.resumen).toBe('Resumen actualizado');
     });
 
     it('should throw ForbiddenException when trying to update without permission', async () => {

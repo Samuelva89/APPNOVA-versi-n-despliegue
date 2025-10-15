@@ -98,9 +98,9 @@ describe('CronogramaService (Integration)', () => {
       const createdCronograma = await service.crear(cronogramaDto);
 
       expect(createdCronograma).toBeDefined();
-      expect(createdCronograma.proyecto.toString()).toEqual(projectoId.toString());
-      expect(createdCronograma.centroDeFormacion).toEqual(cronogramaDto.centroDeFormacion);
-      expect(createdCronograma.actividades).toEqual(expect.arrayContaining(cronogramaDto.actividades));
+      expect(createdCronograma.data.proyecto.toString()).toEqual(projectoId.toString());
+      expect(createdCronograma.data.centroDeFormacion).toEqual(cronogramaDto.centroDeFormacion);
+      expect(createdCronograma.data.actividades).toEqual(expect.arrayContaining(cronogramaDto.actividades));
     });
   });
 
@@ -155,7 +155,7 @@ describe('CronogramaService (Integration)', () => {
       };
       const createdCronograma = await service.crear(cronogramaDto);
 
-      const foundCronograma = await service.consultarPorId(createdCronograma._id);
+      const foundCronograma = await service.consultarPorId(createdCronograma.data._id);
       expect(foundCronograma).toBeDefined();
       expect(foundCronograma.centroDeFormacion).toEqual(cronogramaDto.centroDeFormacion);
     });
@@ -186,11 +186,11 @@ describe('CronogramaService (Integration)', () => {
         entregables: 'Entregable Actualizado',
       };
 
-      const updatedCronograma = await service.actualizar(createdCronograma._id, updateDto);
+      const updatedCronograma = await service.actualizar(createdCronograma.data._id, updateDto);
 
       expect(updatedCronograma).toBeDefined();
-      expect(updatedCronograma.centroDeFormacion).toEqual(updateDto.centroDeFormacion);
-      expect(updatedCronograma.entregables).toEqual(updateDto.entregables);
+      expect(updatedCronograma.data.centroDeFormacion).toEqual(updateDto.centroDeFormacion);
+      expect(updatedCronograma.data.entregables).toEqual(updateDto.entregables);
     });
 
     it('should throw NotFoundException if cronograma to update not found', async () => {
@@ -215,11 +215,11 @@ describe('CronogramaService (Integration)', () => {
       };
       const createdCronograma = await service.crear(cronogramaDto);
 
-      const deletedCronograma = await service.eliminar(createdCronograma._id);
+      const deletedCronograma = await service.eliminar(createdCronograma.data._id);
       expect(deletedCronograma).toBeDefined();
-      expect(deletedCronograma?.centroDeFormacion).toEqual(cronogramaDto.centroDeFormacion);
+      expect(deletedCronograma?.message).toEqual(`Cronograma con ID "${createdCronograma.data._id}" eliminado con éxito.`);
 
-      await expect(service.consultarPorId(createdCronograma._id)).rejects.toThrow(NotFoundException);
+      await expect(service.consultarPorId(createdCronograma.data._id)).rejects.toThrow(NotFoundException);
     });
 
     it('should throw NotFoundException if cronograma to delete not found', async () => {

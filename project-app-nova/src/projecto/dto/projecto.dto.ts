@@ -137,6 +137,11 @@ export class ProjectoDto {
   @IsOptional()
   seguimiento: string[];
 
+  @IsArray({ message: 'El semillero debe ser un arreglo de IDs.' })
+  @IsString({ each: true })
+  @IsOptional()
+  semillero: string[];
+
   @IsArray({ message: 'Las evidencias deben ser un arreglo de IDs.' })
   @IsString({ each: true })
   @IsOptional()

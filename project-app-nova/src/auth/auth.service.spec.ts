@@ -9,12 +9,8 @@ import { UserRole } from '../common/constants/roles.enum';
 // Mock de UserService
 const mockUserService = {
   crear: jest.fn((dto) => ({
-    _id: 'someUserId',
-    nombreCompleto: dto.nombreCompleto,
-    email: dto.email,
-    roles: dto.roles,
-    password: 'password', // Añadir password para validateUser
-    toObject: () => ({
+    message: 'Usuario creado con éxito.',
+    data: {
       _id: 'someUserId',
       nombreCompleto: dto.nombreCompleto,
       email: dto.email,
@@ -22,8 +18,9 @@ const mockUserService = {
       instructorId: dto.instructorId || undefined,
       aprendizId: dto.aprendizId || undefined,
       semilleroId: dto.semilleroId || undefined,
-      password: 'password', // Añadir password para validateUser
-    }),
+      // La contraseña no debería estar en el 'data' del retorno de crear,
+      // ya que el servicio la elimina antes de devolverla.
+    },
   })),
   findOneByEmail: jest.fn((email) => {
     if (email === 'test@example.com') {

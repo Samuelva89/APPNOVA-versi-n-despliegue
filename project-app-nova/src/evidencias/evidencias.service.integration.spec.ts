@@ -82,9 +82,9 @@ describe('EvidenciasService (Integration)', () => {
       const createdEvidencia = await service.crear(evidenciaDto, mockFile, mockUserId);
 
       expect(createdEvidencia).toBeDefined();
-      expect(createdEvidencia.nombre).toEqual(evidenciaDto.nombre);
-      expect(createdEvidencia.path).toEqual(mockFile.path);
-      expect(createdEvidencia.user.toString()).toEqual(mockUserId);
+      expect(createdEvidencia.data.nombre).toEqual(evidenciaDto.nombre);
+      expect(createdEvidencia.data.path).toEqual(mockFile.path);
+      expect(createdEvidencia.data.user.toString()).toEqual(mockUserId);
     });
 
     it('should throw BadRequestException if file is not provided', async () => {
@@ -115,7 +115,7 @@ describe('EvidenciasService (Integration)', () => {
         const dto: CreateEvidenciaDto = { nombre: 'Evidencia para buscar', descripcion: '', proyectoId: mockProjectId.toHexString() };
         const created = await service.crear(dto, mockFile, mockUserId);
 
-        const found = await service.consultarPorId(created._id);
+        const found = await service.consultarPorId(created.data._id);
         expect(found).toBeDefined();
         expect(found.nombre).toBe(dto.nombre);
     });
@@ -131,9 +131,9 @@ describe('EvidenciasService (Integration)', () => {
         const dto: CreateEvidenciaDto = { nombre: 'Evidencia a eliminar', descripcion: '', proyectoId: mockProjectId.toHexString() };
         const created = await service.crear(dto, mockFile, mockUserId);
 
-        await service.eliminar(created._id);
+        await service.eliminar(created.data._id);
 
-        await expect(service.consultarPorId(created._id)).rejects.toThrow(NotFoundException);
+        await expect(service.consultarPorId(created.data._id)).rejects.toThrow(NotFoundException);
     });
   });
 });

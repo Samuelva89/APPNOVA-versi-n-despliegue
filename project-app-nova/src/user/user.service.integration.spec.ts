@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
-import { MongooseModule } from '@nestjs/mongoose';
+import { MongooseModule, getConnectionToken } from '@nestjs/mongoose';
 import { UserSchema } from './dto/user.model';
 import { UserDto } from './dto/user.dto';
 import { UserRole } from '../common/constants/roles.enum';
@@ -36,7 +36,7 @@ describe('UserService (Integration)', () => {
     }).compile();
 
     service = module.get<UserService>(UserService);
-    connection = module.get<Connection>('DatabaseConnection'); // This line is problematic, will be fixed in next step
+    connection = module.get(getConnectionToken());
 
     // Clear collections before each test
     const collections = connection.collections;
@@ -62,10 +62,9 @@ describe('UserService (Integration)', () => {
       const createdUser = await service.crear(userDto);
 
       expect(createdUser).toBeDefined();
-      expect(createdUser.nombreCompleto).toEqual(userDto.nombreCompleto);
-      expect(createdUser.email).toEqual(userDto.email);
-      expect(createdUser.roles).toEqual(userDto.roles);
-      expect(createdUser.password).toBeDefined(); // Password should be hashed
+      expect(createdUser.data.nombreCompleto).toEqual(userDto.nombreCompleto);
+      expect(createdUser.data.email).toEqual(userDto.email);
+      expect(createdUser.data.roles).toEqual(userDto.roles);
 
       const foundUser = await service.findOneByEmail(userDto.email);
       expect(foundUser).toBeDefined();
@@ -86,9 +85,9 @@ describe('UserService (Integration)', () => {
       const createdUser = await service.crear(userDto);
 
       expect(createdUser).toBeDefined();
-      expect(createdUser.instructorId?.toString()).toEqual(userDto.instructorId);
-      expect(createdUser.aprendizId?.toString()).toEqual(userDto.aprendizId);
-      expect(createdUser.semilleroId?.toString()).toEqual(userDto.semilleroId);
+      expect(createdUser.data.instructorId?.toString()).toEqual(userDto.instructorId);
+      expect(createdUser.data.aprendizId?.toString()).toEqual(userDto.aprendizId);
+      expect(createdUser.data.semilleroId?.toString()).toEqual(userDto.semilleroId);
     });
 
     it('should throw ConflictException if email already exists', async () => {
@@ -171,7 +170,7 @@ describe('UserService (Integration)', () => {
       };
       const createdUser = await service.crear(userDto);
 
-      const foundUser = await service.consultarPorId(createdUser._id);
+      const foundUser = await service.consultarPorId(createdUser.data._id);
       expect(foundUser).toBeDefined();
       expect(foundUser.email).toEqual(userDto.email);
     });
@@ -197,12 +196,12 @@ describe('UserService (Integration)', () => {
         email: 'updated@example.com',
       };
 
-      const updatedUser = await service.actualizar(createdUser._id, updateDto);
+      const updatedUser = await service.actualizar(createdUser.data._id, updateDto);
 
       expect(updatedUser).toBeDefined();
-      expect(updatedUser.nombreCompleto).toEqual(updateDto.nombreCompleto);
-      expect(updatedUser.email).toEqual(updateDto.email);
-      expect(updatedUser._id.toString()).toEqual(createdUser._id.toString());
+      expect(updatedUser.data.nombreCompleto).toEqual(updateDto.nombreCompleto);
+      expect(updatedUser.data.email).toEqual(updateDto.email);
+      expect(updatedUser.data._id.toString()).toEqual(createdUser.data._id.toString());
     });
 
     it('should update user password successfully', async () => {
@@ -218,11 +217,12 @@ describe('UserService (Integration)', () => {
         password: 'newpassword',
       };
 
-      const updatedUser = await service.actualizar(createdUser._id, updateDto);
+      await service.actualizar(createdUser.data._id, updateDto);
 
-      expect(updatedUser).toBeDefined();
-      expect(await bcrypt.compare('newpassword', updatedUser.password)).toBe(true);
-      expect(await bcrypt.compare('oldpassword', updatedUser.password)).toBe(false);
+      const updatedUserFromDb = await service.findOneByEmail(userDto.email);
+      expect(updatedUserFromDb).toBeDefined();
+      expect(await bcrypt.compare('newpassword', updatedUserFromDb!.password)).toBe(true);
+      expect(await bcrypt.compare('oldpassword', updatedUserFromDb!.password)).toBe(false);
     });
 
     it('should throw NotFoundException if user to update not found', async () => {
@@ -242,17 +242,16 @@ describe('UserService (Integration)', () => {
       };
       const createdUser = await service.crear(userDto);
 
-      const deletedUser = await service.eliminar(createdUser._id);
+      const deletedUser = await service.eliminar(createdUser.data._id);
       expect(deletedUser).toBeDefined();
-      expect(deletedUser?.email).toEqual(userDto.email);
+      expect(deletedUser?.message).toEqual(`Usuario con ID "${createdUser.data._id}" eliminado con éxito.`);
 
-      await expect(service.consultarPorId(createdUser._id)).rejects.toThrow(NotFoundException); // Corrected assertion
+      await expect(service.consultarPorId(createdUser.data._id)).rejects.toThrow(NotFoundException); // Corrected assertion
     });
 
-    it('should return null if user to delete not found', async () => {
+    it('should throw NotFoundException if user to delete not found', async () => {
       const nonExistentId = '60d5ec49f8c7a40015a7b0a0';
-      const deletedUser = await service.eliminar(nonExistentId);
-      expect(deletedUser).toBeNull();
+      await expect(service.eliminar(nonExistentId)).rejects.toThrow(NotFoundException);
     });
   });
 });

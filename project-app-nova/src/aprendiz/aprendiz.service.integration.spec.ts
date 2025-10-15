@@ -95,10 +95,10 @@ describe('AprendizService (Integration)', () => {
       const createdAprendiz = await service.crear(aprendizDto);
 
       expect(createdAprendiz).toBeDefined();
-      expect(createdAprendiz.nombreCompleto).toEqual(
+      expect(createdAprendiz.data.nombreCompleto).toEqual(
         aprendizDto.nombreCompleto,
       );
-      expect(createdAprendiz.proyectoAsignado.toString()).toEqual(
+      expect(createdAprendiz.data.proyectoAsignado.toString()).toEqual(
         projectoId.toString(),
       );
     });

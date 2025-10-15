@@ -51,7 +51,7 @@ describe('SemilleroService (Integration)', () => {
   describe('crear', () => {
     it('should create a new semillero successfully', async () => {
       const semilleroDto: SemilleroDTO = {
-        Nombre_Semillero: 'Semillero de Prueba',
+        nombreSemillero: 'Semillero de Prueba',
       };
 
       const createdSemillero = await service.crear(semilleroDto);
@@ -62,12 +62,12 @@ describe('SemilleroService (Integration)', () => {
 
     it('should throw ConflictException if semillero name already exists', async () => {
       const semilleroDto1: SemilleroDTO = {
-        Nombre_Semillero: 'Semillero Duplicado',
+        nombreSemillero: 'Semillero Duplicado',
       };
       await service.crear(semilleroDto1);
 
       const semilleroDto2: SemilleroDTO = {
-        Nombre_Semillero: 'Semillero Duplicado',
+        nombreSemillero: 'Semillero Duplicado',
       };
 
       await expect(service.crear(semilleroDto2)).rejects.toThrow(ConflictException);
@@ -76,8 +76,8 @@ describe('SemilleroService (Integration)', () => {
 
   describe('ConsultarTodos', () => {
     it('should return all semilleros', async () => {
-        await service.crear({ Nombre_Semillero: 'Semillero A' });
-        await service.crear({ Nombre_Semillero: 'Semillero B' });
+        await service.crear({ nombreSemillero: 'Semillero A' });
+        await service.crear({ nombreSemillero: 'Semillero B' });
 
       const semilleros = await service.ConsultarTodos();
       expect(semilleros).toBeDefined();

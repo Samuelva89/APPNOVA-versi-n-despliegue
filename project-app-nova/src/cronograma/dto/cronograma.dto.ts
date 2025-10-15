@@ -5,7 +5,7 @@ import { IProjecto } from 'src/projecto/dto/projecto.model';
 export class CronogramaDto {
   // Cambiamos el título por el ID del proyecto para una mejor relación de datos.
   @IsString()
-  @IsNotEmpty({ message: 'El ID del proyecto es obligatorio.' })
+  @IsOptional()
   proyecto: IProjecto['_id'];
 
   // Aplicamos camelCase.
