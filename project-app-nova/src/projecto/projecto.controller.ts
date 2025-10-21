@@ -75,7 +75,7 @@ export class ProjectoController {
   }
 
   @Delete(':id')
-  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.LIDER_DE_SEMILLERO)
+  @Roles(UserRole.LIDER_DE_SEMILLERO)
   async eliminar(@Param('id') id: string, @Req() req:any): Promise<any> {
     return await this.ProjectoService.eliminar(id, req.user);
   }

@@ -72,7 +72,7 @@ export class EvidenciasController {
   }
 
   @Delete(':id')
-  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.COINVESTIGADOR, UserRole.INVESTIGADOR, UserRole.LIDER_DE_SEMILLERO)
+  @Roles(UserRole.LIDER_DE_SEMILLERO)
   async eliminar(@Param('id') id: string): Promise<any> { // Se cambia el tipo y se elimina @HttpCode
     return await this.evidenciaService.eliminar(id);
   }

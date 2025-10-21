@@ -59,7 +59,7 @@ export class CronogramaController {
   }
 
   @Delete(':id')
-  @Roles(UserRole.LIDER_DE_PROYECTO, UserRole.COINVESTIGADOR, UserRole.INVESTIGADOR, UserRole.LIDER_DE_SEMILLERO)
+  @Roles(UserRole.LIDER_DE_SEMILLERO)
   async eliminar(@Param('id') id: string): Promise<any> {
     return await this.cronogramaService.eliminar(id);
   }
