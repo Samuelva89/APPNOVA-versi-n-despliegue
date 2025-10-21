@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsDateString, IsArray } from 'class-validator';
+import { IsNotEmpty, IsString, IsDateString, IsArray, IsOptional } from 'class-validator';
 import { IProjecto } from 'src/projecto/dto/projecto.model';
 
 // Renombramos la clase para ser más específicos sobre su propósito (Creación).
