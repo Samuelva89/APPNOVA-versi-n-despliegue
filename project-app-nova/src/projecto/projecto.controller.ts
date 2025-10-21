@@ -19,7 +19,7 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 import { UserRole } from 'src/common/constants/roles.enum';
 
-@Controller('projecto')
+@Controller('Projecto')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 export class ProjectoController {
   constructor(private readonly ProjectoService: ProjectoService) {}
