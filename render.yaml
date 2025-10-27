@@ -1,18 +1,16 @@
-# Archivo de configuración para Render
-# https://render.com/docs/blueprint-spec
-
 services:
   - type: web
     name: appnova-backend
-    env: node
-    plan: free # Puedes cambiarlo a un plan de pago si lo necesitas
-    rootDir: project-app-nova # Directorio donde se encuentra la app NestJS
-    buildCommand: "npm install && npm run build"
-    startCommand: "npm run start:prod"
+    # Configuración para usar Dockerfile
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    # Render detectará automáticamente el puerto expuesto en el Dockerfile (3000)
+    # y el comando de inicio (CMD).
+    # Puedes añadir variables de entorno aquí o en el dashboard de Render.
     envVars:
-      - key: NODE_VERSION
-        value: 22
       - key: DATABASE_URL
         # ¡IMPORTANTE! Este valor se debe configurar de forma segura
         # en el dashboard de Render, en la sección de "Environment Variables".
         value: "MONGODB_URI"
+    # Puedes especificar un plan si no quieres el 'free'
+    # plan: free
